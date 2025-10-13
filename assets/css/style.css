@@ -1,0 +1,280 @@
+/* Load font dari folder assets/fonts */
+@font-face {
+    font-family: 'MyFontText';
+    src: url('../fonts/LGEITextTTF-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'MyFontHeadline';
+    src: url('../fonts/LGEIHeadlineTTF-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* --- PERBAIKAN: Gunakan Flexbox untuk layout utama --- */
+body {
+    margin: 0;
+    font-family: 'MyFontText', sans-serif;
+    background: #0f172a;
+    color: #ffffff;
+    /* Mengatur body sebagai flex container */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* Tinggi minimal seukuran layar */
+}
+
+/* ### CSS HEADER DIPERBARUI ### */
+header {
+    padding: 15px 40px;
+    background: #1e293b;
+    border-bottom: 3px solid #334155;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.header-title {
+    font-family: 'MyFontHeadline', sans-serif;
+    font-size: 1.8em;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+#datetime-container {
+    text-align: right;
+}
+
+#time-display {
+    font-family: 'MyFontHeadline', sans-serif;
+    font-size: 2em;
+    letter-spacing: 2px;
+}
+
+#date-display {
+    font-size: 1em;
+    color: #cbd5e1;
+}
+
+/* --- PERBAIKAN: Biarkan grid tumbuh mengisi ruang --- */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 30px;
+    padding: 40px;
+    box-sizing: border-box;
+    /* flex-grow akan membuat grid mengisi ruang kosong di body */
+    flex-grow: 1;
+    /* min-height tidak lagi diperlukan */
+}
+
+.card {
+    background: #1e293b;
+    border-left: 10px solid #64748b;
+    border-radius: 16px;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    /* Memberi tinggi minimum pada kartu */
+    min-height: 200px;
+    letter-spacing: 1px;
+}
+
+.card.ok {
+    border-left-color: #22c55e;
+}
+
+.card.disconnected {
+    border-left-color: #ef4444;
+    background: #7f1d1d;
+}
+
+.card.unknown {
+    border-left-color: #94a3b8;
+    background: #334155;
+}
+
+.blinking {
+    animation: blink-bg 0.7s infinite;
+}
+
+@keyframes blink-bg {
+
+    0%,
+    100% {
+        background-color: #7f1d1d;
+    }
+
+    50% {
+        background-color: #b91c1c;
+    }
+}
+
+.location {
+    font-size: 2.2em;
+    margin-bottom: 8px;
+}
+
+/* ### CSS BARU UNTUK DESKRIPSI ### */
+.location-description {
+    font-size: 1.2em;
+    color: #94a3b8;
+    /* Warna abu-abu yang lebih lembut */
+    margin-bottom: 25px;
+    /* Memberi jarak ke status di bawahnya */
+    /* font-style: italic; */
+}
+
+.status {
+    font-size: 3.5em;
+    font-weight: bold;
+    /* Warna default (putih) akan digunakan jika tidak ada kondisi khusus */
+    color: #ffffff;
+}
+
+/* ### CSS BARU UNTUK MEWARNAI TEKS STATUS ### */
+
+/* Jika kartu berstatus OK, warnai teks menjadi hijau terang */
+.card.ok .status {
+    color: #22c55e;
+    /* Warna hijau yang cerah dan mudah dibaca */
+}
+
+/* Jika kartu berstatus DISCONNECTED, teks tetap putih agar kontras dengan latar merah */
+.card.disconnected .status {
+    color: #ef4444;
+}
+
+/* Jika kartu berstatus UNKNOWN, warnai teks menjadi abu-abu terang */
+.card.unknown .status {
+    color: #94a3b8;
+    /* Warna abu-abu yang sesuai dengan border */
+}
+
+.timestamp {
+    font-size: 1.4em;
+    color: #cbd5e1;
+    margin-top: 25px;
+    font-style: italic;
+    /* Menambah gaya agar berbeda */
+}
+
+/* --- Footer Styles --- */
+footer {
+    background: #1e293b;
+    color: #cbd5e1;
+    padding: 20px 40px;
+    border-top: 3px solid #334155;
+    display: flex;
+    /* Mengatur item dalam satu baris */
+    flex-direction: row;
+    /* Memberi jarak antara legenda (kiri) dan catatan (kanan) */
+    justify-content: space-between;
+    align-items: center;
+    /* Memastikan item turun ke bawah jika layar terlalu sempit */
+    flex-wrap: wrap;
+    gap: 20px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.legend {
+    display: flex;
+    flex-direction: row;
+    /* Jarak antar item legenda */
+    gap: 25px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+legend-item {
+    display: flex;
+    align-items: center;
+    /* Jarak antara kotak warna dan teks */
+    gap: 8px;
+    font-size: 1em;
+}
+
+.legend div {
+    display: flex;
+    align-items: center;
+    font-size: 1em;
+}
+
+.legend-box {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 2px solid #334155;
+    flex-shrink: 0;
+}
+
+.legend-box.ok {
+    background-color: #22c55e;
+}
+
+.legend-box.disconnected {
+    background-color: #ef4444;
+}
+
+.legend-box.unknown {
+    background-color: #94a3b8;
+}
+
+.note {
+    font-size: 0.9em;
+    font-style: italic;
+    text-align: right;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1200px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    footer {
+        justify-content: center;
+        /* Pusatkan item footer jika layar menyempit */
+    }
+}
+
+/* ### CSS RESPONSIVE DIPERBARUI ### */
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    header {
+        flex-direction: column;
+        /* Tumpuk judul dan jam secara vertikal */
+        justify-content: center;
+        text-align: center;
+    }
+
+    #datetime-container {
+        text-align: center;
+    }
+
+    footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .note {
+        text-align: center;
+    }
+}
