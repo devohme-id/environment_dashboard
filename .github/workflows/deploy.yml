@@ -1,0 +1,36 @@
+name: 🚀 Deploy to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: SSH & Deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            echo "go to project directory..."
+            cd ${{ secrets.PROJECT_PATH }}
+
+            echo "pulling latest code..."
+            git pull origin main
+
+            echo "setting correct permissions..."
+            sudo chown -R www-data:www-data .
+            sudo find . -type f -exec chmod 644 {} \;
+            sudo find . -type d -exec chmod 755 {} \;
+
+            echo "Deploy selesai!"
+          EOF
