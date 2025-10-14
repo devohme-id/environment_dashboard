@@ -11,15 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout kode
+      - name: Checkout kode
         uses: actions/checkout@v3
 
-      - name: 🔐 Setup SSH Agent
+      - name: Setup SSH Agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
-      - name: 🚀 SSH & Deploy ke Server
+      - name: SSH & Deploy ke Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd ${{ secrets.PROJECT_PATH }}
@@ -30,5 +30,5 @@ jobs:
             sudo find . -type f -exec chmod 644 {} \;
             sudo find . -type d -exec chmod 755 {} \;
 
-            echo "✅ Deploy sukses!"
+            echo "Deploy sukses!"
           EOF
