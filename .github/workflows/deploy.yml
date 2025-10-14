@@ -1,4 +1,4 @@
-name: 🚀 CI/CD Deploy ke Server
+name: 🚀 CI/CD Deploy ke Server (Self-Hosted)
 
 on:
   push:
@@ -7,28 +7,20 @@ on:
 
 jobs:
   deploy:
-    name: Deploy ke Server
-    runs-on: ubuntu-latest
+    name: Deploy on Local Server
+    runs-on: self-hosted
 
     steps:
-      - name: Checkout kode
-        uses: actions/checkout@v3
-
-      - name: Setup SSH Agent
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
-
-      - name: SSH & Deploy ke Server
+      - name: 🔁 Pull latest code
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd ${{ secrets.PROJECT_PATH }}
-            git pull origin main
+          cd /var/www/html/testcicd
+          git pull origin main
 
-            echo "🔧 Fixing permissions..."
-            sudo chown -R www-data:www-data .
-            sudo find . -type f -exec chmod 644 {} \;
-            sudo find . -type d -exec chmod 755 {} \;
+      - name: 🔐 Fix permissions
+        run: |
+          sudo chown -R www-data:www-data /var/www/html/testcicd
+          sudo find /var/www/html/testcicd -type f -exec chmod 644 {} \;
+          sudo find /var/www/html/testcicd -type d -exec chmod 755 {} \;
 
-            echo "Deploy sukses!"
-          EOF
+      - name: ✅ Done
+        run: echo "Deploy sukses!"
