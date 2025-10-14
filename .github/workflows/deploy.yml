@@ -11,12 +11,16 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: 🛠 Fix ownership before pulling
+        run: |
+          sudo chown -R devsrvdb1:devsrvdb1 /var/www/html/testcicd
+
       - name: 🔁 Pull latest code
         run: |
           cd /var/www/html/testcicd
           git pull origin main
 
-      - name: 🔐 Fix permissions
+      - name: 🔐 Set permissions for web server
         run: |
           sudo chown -R www-data:www-data /var/www/html/testcicd
           sudo find /var/www/html/testcicd -type f -exec chmod 644 {} \;
