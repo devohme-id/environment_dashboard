@@ -93,23 +93,19 @@ function loadStatus() {
                   <div class="location">${loc}</div>
                   <div class="location-description">${description}</div>
                   
-                  
-                  <div class="status-animation">
-                  <i class="ti ti-building-estate machine-icon"></i>
-                  
-                    <svg class="cable-svg cable-ok" width="80" height="30" viewBox="0 0 80 30">
-                        <path class="cable-path" d="M 5,15 C 25,0 55,30 75,15"/>
-                    </svg>
-                    <svg class="cable-svg cable-error" width="80" height="30" viewBox="0 0 80 30">
-                        <path class="cable-path" d="M 5,15 C 25,0 35,15 38,15"/>
-                        <path class="cable-path" d="M 42,15 C 45,15 55,30 75,15"/>
-                    </svg>
-                    
-                    <i class="ti ti-outlet device-icon"></i>
+                    <div class="status-animation">
+                        <i class="ti ti-building-estate machine-icon"></i>
+                        <svg class="cable-svg cable-ok" width="80" height="30" viewBox="0 0 80 30">
+                            <path class="cable-path" d="M 5,15 C 25,0 55,30 75,15"/>
+                        </svg>
+                        <svg class="cable-svg cable-error" width="80" height="30" viewBox="0 0 80 30">
+                            <path class="cable-path" d="M 5,15 C 25,0 35,15 38,15"/>
+                            <path class="cable-path" d="M 42,15 C 45,15 55,30 75,15"/>
+                        </svg>
+                        <i class="ti ti-outlet device-icon"></i>
                     </div>
-                  
+
                   <div class="status-text">${status}</div>
-                  
                   <div class="timestamp" title="Pembaruan Terakhir: ${timestamp}">${waktuTampil}</div>
                 `;
                 grid.appendChild(card);
@@ -132,8 +128,8 @@ function loadStatus() {
 // Inisialisasi dan interval pembaruan
 document.addEventListener('DOMContentLoaded', () => {
     updateDateTime();
-    setInterval(updateDateTime, 1000);
+    //setInterval(updateDateTime, 1000);
 
     loadStatus();
-    setInterval(loadStatus, 15000); // Periksa status setiap 15 detik
+    //setInterval(loadStatus, 15000); // Periksa status setiap 15 detik
 });

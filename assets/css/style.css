@@ -74,10 +74,10 @@ header {
     background: #1e293b;
     border-left: 10px solid #64748b;
     border-radius: 16px;
-    padding: 35px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease-in-out;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
@@ -142,7 +142,7 @@ header {
 
 .device-icon,
 .machine-icon {
-    font-size: 48px;
+    font-size: 64px;
 }
 
 .cable-svg {
