@@ -74,7 +74,7 @@ header {
     background: #1e293b;
     border-left: 10px solid #64748b;
     border-radius: 16px;
-    padding: 15px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
