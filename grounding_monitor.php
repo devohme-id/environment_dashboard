@@ -16,7 +16,7 @@
             GROUNDING CHECKER MONITORING
         </div>
         <nav>
-            <a href="index.php" class="nav-btn" style="text-decoration: none;">Back</a>
+            <a href="index.php" class="nav-btn" style="text-decoration: none;" rel="noreferrer nofollow" target="_top">Back</a>
         </nav>
         <div id="datetime-container">
             <div id="time-display"></div>

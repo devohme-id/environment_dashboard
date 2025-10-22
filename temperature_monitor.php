@@ -21,7 +21,7 @@
             <button id="btn-page-1" class="nav-btn active" onclick="loadPage(1)">SMT Lines</button>
             <button id="btn-page-2" class="nav-btn" onclick="loadPage(2)">Area & Storage</button>
             <button id="btn-page-3" class="nav-btn" onclick="loadPage(3)">Facility</button>
-            <a href="grounding_monitor.php" class="nav-btn" style="text-decoration: none;">Grounding</a>
+            <a href="grounding_monitor.php" class="nav-btn" style="text-decoration: none;" rel="noreferrer nofollow" target="_top">Grounding</a>
         </nav>
         <div id="datetime-container">
             <div id="time-display"></div>
