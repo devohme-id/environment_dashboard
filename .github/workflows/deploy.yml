@@ -1,5 +1,4 @@
-name: 🚀 CI/CD Deploy ke Server (Self-Hosted)
-
+name: Environment 192.168.12.204
 on:
   push:
     branches:
@@ -7,24 +6,24 @@ on:
 
 jobs:
   deploy:
-    name: Deploy on Local Server
+    name: Local server 192.168.12.204
     runs-on: self-hosted
 
     steps:
-      - name: 🛠 Fix ownership before pulling
+      - name: Fix file dan folder ownership sebelum git pull
         run: |
           sudo chown -R devsrvdb1:devsrvdb1 /var/www/html/testcicd
 
-      - name: 🔁 Pull latest code
+      - name: Pull code terbaru dari repository
         run: |
           cd /var/www/html/testcicd
           git pull origin main
 
-      - name: 🔐 Set permissions for web server
+      - name: Set permissions file dan folder webserver
         run: |
           sudo chown -R www-data:www-data /var/www/html/testcicd
           sudo find /var/www/html/testcicd -type f -exec chmod 644 {} \;
           sudo find /var/www/html/testcicd -type d -exec chmod 755 {} \;
 
-      - name: ✅ Done
-        run: echo "Deploy sukses!"
+      - name: Done
+        run: echo "Deploy berhasil!"
