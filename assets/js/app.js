@@ -128,8 +128,8 @@ function loadStatus() {
 // Inisialisasi dan interval pembaruan
 document.addEventListener('DOMContentLoaded', () => {
     updateDateTime();
-    //setInterval(updateDateTime, 1000);
+    setInterval(updateDateTime, 1000);
 
     loadStatus();
-    //setInterval(loadStatus, 15000); // Periksa status setiap 15 detik
+    setInterval(loadStatus, 15000); // Periksa status setiap 15 detik
 });

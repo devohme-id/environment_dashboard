@@ -117,13 +117,14 @@ header {
 
 .location {
     font-size: 2.2em;
-    margin-bottom: 8px;
+    margin-bottom: 0px;
 }
 
 .location-description {
     font-size: 1.2em;
     color: #94a3b8;
     /* PERUBAHAN: Margin disesuaikan */
+    margin-top:5px;
     margin-bottom: 15px;
 }
 
