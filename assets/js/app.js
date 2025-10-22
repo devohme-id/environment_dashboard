@@ -15,8 +15,8 @@ function formatWaktuRelatif(timestampString) {
     if (selisihDetik < 5) return "recently";
     if (selisihDetik < 60) return `${selisihDetik} seconds ago`;
     // ### TAMPILAN MENIT DIPERPANJANG ###
-    if (selisihMenit < 90) return `${selisihMenit} minutes ago`; 
-    
+    if (selisihMenit < 90) return `${selisihMenit} minutes ago`;
+
     return `more than 90 minutes ago`;
 }
 
@@ -64,15 +64,15 @@ function loadStatus() {
                 const item = dataMap.get(loc);
                 let status = "UNKNOWN";
                 let timestamp = "-";
-                
+
                 // Logika kini sederhana: hanya baca status dari server
                 if (item) {
                     status = item.ground_status;
                     timestamp = item.timestamp;
                 }
-                
-                let cardClass = status.toLowerCase(); // ok, disconnected, atau unknown
-                
+
+                let cardClass = status.toLowerCase();
+
                 if (status === 'DISCONNECTED') {
                     cardClass += ' blinking';
                     hasDisconnected = true;
@@ -80,17 +80,29 @@ function loadStatus() {
 
                 const card = document.createElement('div');
                 card.className = `card ${cardClass}`;
-                
-                const waktuTampil = formatWaktuRelatif(timestamp);
 
-                // Ambil deskripsi dari map, jika tidak ada beri nilai default string kosong
+                const waktuTampil = formatWaktuRelatif(timestamp);
                 const description = locationDescriptions[loc] || '';
 
-                // --- KARTU HTML DIPERBARUI DENGAN DESKRIPSI ---
+                // --- PERUBAHAN HTML: Menambahkan <div class="status-text"> ---
                 card.innerHTML = `
                   <div class="location">${loc}</div>
                   <div class="location-description">${description}</div>
-                  <div class="status">${status}</div>
+                  
+                  <div class="status-animation">
+                    <i class="ti ti-device-desktop device-icon"></i>
+                    <svg class="cable-svg cable-ok" width="80" height="30" viewBox="0 0 80 30">
+                        <path class="cable-path" d="M 5,15 C 25,0 55,30 75,15"/>
+                    </svg>
+                    <svg class="cable-svg cable-error" width="80" height="30" viewBox="0 0 80 30">
+                        <path class="cable-path" d="M 5,15 C 25,0 35,15 38,15"/>
+                        <path class="cable-path" d="M 42,15 C 45,15 55,30 75,15"/>
+                    </svg>
+                    <i class="ti ti-building-factory machine-icon"></i>
+                  </div>
+                  
+                  <div class="status-text">${status}</div>
+                  
                   <div class="timestamp" title="Pembaruan Terakhir: ${timestamp}">${waktuTampil}</div>
                 `;
                 grid.appendChild(card);
@@ -114,7 +126,7 @@ function loadStatus() {
 document.addEventListener('DOMContentLoaded', () => {
     updateDateTime();
     setInterval(updateDateTime, 1000);
-    
+
     loadStatus();
     setInterval(loadStatus, 15000); // Periksa status setiap 15 detik
 });

@@ -19,11 +19,9 @@ body {
     font-family: 'MyFontText', sans-serif;
     background: #0f172a;
     color: #ffffff;
-    /* Mengatur body sebagai flex container */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    /* Tinggi minimal seukuran layar */
 }
 
 /* ### CSS HEADER DIPERBARUI ### */
@@ -69,9 +67,7 @@ header {
     gap: 30px;
     padding: 40px;
     box-sizing: border-box;
-    /* flex-grow akan membuat grid mengisi ruang kosong di body */
     flex-grow: 1;
-    /* min-height tidak lagi diperlukan */
 }
 
 .card {
@@ -85,7 +81,6 @@ header {
     align-items: center;
     transition: all 0.3s ease-in-out;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-    /* Memberi tinggi minimum pada kartu */
     min-height: 200px;
     letter-spacing: 1px;
 }
@@ -125,48 +120,147 @@ header {
     margin-bottom: 8px;
 }
 
-/* ### CSS BARU UNTUK DESKRIPSI ### */
 .location-description {
     font-size: 1.2em;
     color: #94a3b8;
-    /* Warna abu-abu yang lebih lembut */
-    margin-bottom: 25px;
-    /* Memberi jarak ke status di bawahnya */
-    /* font-style: italic; */
+    /* PERUBAHAN: Margin disesuaikan */
+    margin-bottom: 15px;
 }
 
-.status {
-    font-size: 3.5em;
-    font-weight: bold;
-    /* Warna default (putih) akan digunakan jika tidak ada kondisi khusus */
-    color: #ffffff;
+
+/* =====================================================
+--- CSS ANIMASI STATUS ---
+===================================================== */
+
+.status-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+    height: 40px;
 }
 
-/* ### CSS BARU UNTUK MEWARNAI TEKS STATUS ### */
-
-/* Jika kartu berstatus OK, warnai teks menjadi hijau terang */
-.card.ok .status {
-    color: #22c55e;
-    /* Warna hijau yang cerah dan mudah dibaca */
+.device-icon,
+.machine-icon {
+    font-size: 28px;
 }
 
-/* Jika kartu berstatus DISCONNECTED, teks tetap putih agar kontras dengan latar merah */
-.card.disconnected .status {
+.cable-svg {
+    margin: 0 10px;
+    overflow: visible;
+}
+
+.cable-path {
+    stroke-width: 4px;
+    stroke-linecap: round;
+    fill: none;
+}
+
+/* === Status OK === */
+.card.ok .cable-error {
+    display: none;
+}
+
+.card.ok .device-icon,
+.card.ok .machine-icon {
+    color: #28a745;
+}
+
+.card.ok .cable-ok .cable-path {
+    stroke: #28a745;
+    stroke-dasharray: 8 8;
+    animation: flow 1s linear infinite;
+}
+
+/* === Status Selain OK === */
+.card:not(.ok) .cable-ok {
+    display: none;
+}
+
+.card.disconnected .device-icon,
+.card.disconnected .machine-icon {
     color: #ef4444;
 }
 
-/* Jika kartu berstatus UNKNOWN, warnai teks menjadi abu-abu terang */
-.card.unknown .status {
-    color: #94a3b8;
-    /* Warna abu-abu yang sesuai dengan border */
+.card.disconnected .cable-error .cable-path {
+    stroke: #ef4444;
 }
+
+.card.unknown .device-icon,
+.card.unknown .machine-icon {
+    color: #94a3b8;
+}
+
+.card.unknown .cable-error .cable-path {
+    stroke: #94a3b8;
+}
+
+.card:not(.ok) .cable-error {
+    animation: pulse-error 1.5s ease-in-out infinite;
+}
+
+/* Keyframes */
+@keyframes flow {
+    from {
+        stroke-dashoffset: 0;
+    }
+
+    to {
+        stroke-dashoffset: -16;
+    }
+}
+
+@keyframes pulse-error {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* =====================================================
+--- PERUBAHAN: CSS BARU UNTUK TEKS STATUS ---
+===================================================== */
+
+.status-text {
+    font-size: 1.0em;
+    /* Dibuat kecil */
+    font-weight: bold;
+    margin-top: 10px;
+    /* Jarak dari animasi di atasnya */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Mewarnai teks status sesuai kondisi card */
+.card.ok .status-text {
+    color: #22c55e;
+}
+
+.card.disconnected .status-text {
+    color: #ef4444;
+}
+
+.card.unknown .status-text {
+    color: #94a3b8;
+}
+
+/* =====================================================
+--- AKHIR PERUBAHAN ---
+===================================================== */
 
 .timestamp {
     font-size: 1.4em;
     color: #cbd5e1;
-    margin-top: 25px;
+    /* PERUBAHAN: Margin disesuaikan */
+    margin-top: 15px;
     font-style: italic;
-    /* Menambah gaya agar berbeda */
 }
 
 /* --- Footer Styles --- */
@@ -176,12 +270,9 @@ footer {
     padding: 20px 40px;
     border-top: 3px solid #334155;
     display: flex;
-    /* Mengatur item dalam satu baris */
     flex-direction: row;
-    /* Memberi jarak antara legenda (kiri) dan catatan (kanan) */
     justify-content: space-between;
     align-items: center;
-    /* Memastikan item turun ke bawah jika layar terlalu sempit */
     flex-wrap: wrap;
     gap: 20px;
     box-sizing: border-box;
@@ -191,7 +282,6 @@ footer {
 .legend {
     display: flex;
     flex-direction: row;
-    /* Jarak antar item legenda */
     gap: 25px;
     align-items: center;
     flex-wrap: wrap;
@@ -200,7 +290,6 @@ footer {
 legend-item {
     display: flex;
     align-items: center;
-    /* Jarak antara kotak warna dan teks */
     gap: 8px;
     font-size: 1em;
 }
@@ -245,11 +334,9 @@ legend-item {
 
     footer {
         justify-content: center;
-        /* Pusatkan item footer jika layar menyempit */
     }
 }
 
-/* ### CSS RESPONSIVE DIPERBARUI ### */
 @media (max-width: 768px) {
     .grid {
         grid-template-columns: 1fr;
@@ -259,7 +346,6 @@ legend-item {
 
     header {
         flex-direction: column;
-        /* Tumpuk judul dan jam secara vertikal */
         justify-content: center;
         text-align: center;
     }

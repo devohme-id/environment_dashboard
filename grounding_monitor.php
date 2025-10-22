@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <title>Grounding Monitoring System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -18,10 +21,8 @@
             <div id="date-display"></div>
         </div>
     </header>
-    <!-- <header>🟢 GROUNDING CHECKER MONITORING</header> -->
     <div class="grid" id="monitor-grid"></div>
 
-    <!-- Alarm sound -->
     <audio id="alarmSound" src="assets/alarm.wav" allow="autoplay; fullscreen" preload="auto" loop></audio>
 
     <footer>
