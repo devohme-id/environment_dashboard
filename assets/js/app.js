@@ -95,7 +95,7 @@ function loadStatus() {
                   
                   
                   <div class="status-animation">
-                  <i class="ti ti-box machine-icon"></i>
+                  <i class="ti ti-building-factory-2 machine-icon"></i>
                   
                     <svg class="cable-svg cable-ok" width="80" height="30" viewBox="0 0 80 30">
                         <path class="cable-path" d="M 5,15 C 25,0 55,30 75,15"/>
@@ -105,7 +105,7 @@ function loadStatus() {
                         <path class="cable-path" d="M 42,15 C 45,15 55,30 75,15"/>
                     </svg>
                     
-                    <i class="ti ti-solar-panel device-icon"></i>
+                    <i class="ti ti-outlet device-icon"></i>
                     </div>
                   
                   <div class="status-text">${status}</div>
