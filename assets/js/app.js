@@ -95,7 +95,7 @@ function loadStatus() {
                   
                   
                   <div class="status-animation">
-                  <i class="ti ti-building-factory-2 machine-icon"></i>
+                  <i class="ti ti-building-estate machine-icon"></i>
                   
                     <svg class="cable-svg cable-ok" width="80" height="30" viewBox="0 0 80 30">
                         <path class="cable-path" d="M 5,15 C 25,0 55,30 75,15"/>
