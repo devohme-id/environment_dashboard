@@ -124,7 +124,7 @@ header {
     font-size: 1.2em;
     color: #94a3b8;
     /* PERUBAHAN: Margin disesuaikan */
-    margin-top:5px;
+    margin-top: 5px;
     margin-bottom: 15px;
 }
 
@@ -364,4 +364,34 @@ legend-item {
     .note {
         text-align: center;
     }
+}
+
+nav {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.nav-btn {
+    font-family: 'MyFontHeadline', sans-serif;
+    background-color: #334155;
+    color: #cbd5e1;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s;
+}
+
+.nav-btn:hover {
+    background-color: #475569;
+    transform: translateY(-2px);
+}
+
+.nav-btn.active {
+    background-color: #38bdf8;
+    color: #ffffff;
+    font-weight: bold;
+    box-shadow: 0 0 10px #38bdf880;
 }

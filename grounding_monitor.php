@@ -15,6 +15,9 @@
         <div class="header-title">
             GROUNDING CHECKER MONITORING
         </div>
+        <nav>
+            <a href="index.php" class="nav-btn" style="text-decoration: none;">Back</a>
+        </nav>
         <div id="datetime-container">
             <div id="time-display"></div>
             <div id="date-display"></div>
