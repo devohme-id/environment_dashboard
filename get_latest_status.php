@@ -24,9 +24,9 @@ $sql = "SELECT
             t1.*
             FROM
             grounding_logs t1
-            INNER JOIN (SELECT line_id, MAX(TIMESTAMP) AS max_timestamp FROM grounding_logs GROUP BY line_id) t2 ON t1.line_id = t2.line_id
+            INNER JOIN (SELECT DISTINCT line_id, MAX(TIMESTAMP) AS max_timestamp FROM grounding_logs GROUP BY line_id) t2 ON t1.line_id = t2.line_id
             AND t1.TIMESTAMP = t2.max_timestamp
-            WHERE t1.ground_status = 'OK'
+            WHERE t1.ground_status = 'OK' OR t1.ground_status = 'DISCONNECTED'
             GROUP BY t2.line_id ORDER BY t2.line_id";
 
 $result = $conn->query($sql);
