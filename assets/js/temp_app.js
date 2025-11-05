@@ -17,7 +17,7 @@ const pageConfig = {
             { title: "Semiconductor Humidity", type: 'humidity', devices: { 12: "Semiconductor" }, limits: { lm: 60, lw: 55, uw: 35, um: 30 } },
             { title: "Production Humidity", type: 'humidity', devices: { 13: "Production" }, limits: { lm: 60, lw: 55, uw: 35, um: 30 } },
             { title: "Delivery Temperature", type: 'temperature', devices: { 24: "Delivery" }, limits: { lm: 28, lw: 27, uw: 23, um: 22 } },
-            { title: "Solder Paste Temperature", type: 'temperature_solder', devices: { 25: "Top", 26: "Bottom" }, limits: { lm: 8, lw: 7, uw: 3, um: 2 } }
+            { title: "Solder Paste Temperature", type: 'temperature_solder', devices: { 25: "Cooling Case", 26: "Storage" }, limits: { lm: 8, lw: 7, uw: 3, um: 2 } }
         ]
     },
     3: { // Halaman 3: Facility
@@ -78,7 +78,7 @@ async function loadPage(pageNum = null) {
         const title = document.getElementById(`chart-title-${i}`);
         if (title) title.textContent = 'Memuat Data...';
     }
-    
+
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
     const activeBtn = document.getElementById(`btn-page-${currentPage}`);
     if(activeBtn) activeBtn.classList.add('active');
@@ -106,7 +106,7 @@ function renderPage(pageNum, data) {
     const config = pageConfig[pageNum];
     if (!config) return;
     let isAnyAlarmActive = false;
-    
+
     config.charts.forEach((chartConfig, index) => {
         const card = document.getElementById(`chart-card-${index + 1}`);
         const titleEl = document.getElementById(`chart-title-${index}`);
@@ -124,7 +124,7 @@ function renderPage(pageNum, data) {
         const chartData = { labels: [], datasets: [] };
         const lineColors = ['#4ade80', '#fb923c', '#a78bfa', '#f87171', '#38bdf8', '#facc15'];
         let colorIndex = 0;
-        
+
         const statusInfo = getCardStatus(data, chartConfig.devices, chartConfig.limits, chartConfig.type);
         card.classList.add(`status-${statusInfo.status}`);
 
@@ -133,7 +133,7 @@ function renderPage(pageNum, data) {
             card.classList.add('blinking');
             isAnyAlarmActive = true;
         }
-        
+
         if (statusInfo.anomalySensors.length > 0) {
             const anomalyMsg = document.createElement('div');
             anomalyMsg.className = 'anomaly-message';
@@ -144,14 +144,14 @@ function renderPage(pageNum, data) {
         for (const devid in chartConfig.devices) {
             const deviceName = chartConfig.devices[devid];
             const deviceData = data[devid] || [];
-            
+
             let dataKey;
             if (chartConfig.type === 'humidity') {
                 dataKey = 'humidity';
             } else { // Covers 'temperature', 'temperature_solder', and 'pressure'
                 dataKey = 'temperature';
             }
-            
+
             const values = deviceData.map(d => parseFloat(d[dataKey]));
             chartData.datasets.push({
                 label: deviceName,
@@ -170,7 +170,7 @@ function renderPage(pageNum, data) {
         if (data[firstDevId] && data[firstDevId].length > 0) {
             chartData.labels = data[firstDevId].map(d => new Date(d.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }));
         }
-        
+
         const newChart = new Chart(canvas.getContext('2d'), {
             type: 'line',
             data: chartData,
@@ -193,7 +193,7 @@ function renderPage(pageNum, data) {
 function getCardStatus(allData, deviceMap, limits, chartType) {
     const STALE_THRESHOLD_MINUTES = 65;
     const now = new Date();
-    
+
     let anomalySensors = [];
     let activeValues = [];
     const totalSensors = Object.keys(deviceMap).length;
@@ -232,10 +232,10 @@ function getCardStatus(allData, deviceMap, limits, chartType) {
     }
 
     if (!activeValues.length || !limits) return { status: 'unknown', anomalySensors: [] };
-    
+
     let isDanger = activeValues.some(v => v > limits.lm || v < limits.um);
     let isWarning = activeValues.some(v => (v > limits.lw && v <= limits.lm) || (v < limits.uw && v >= limits.um));
-    
+
     if (isDanger) return { status: 'danger', anomalySensors: [] };
     if (isWarning) return { status: 'warning', anomalySensors: [] };
     return { status: 'safe', anomalySensors: [] };
@@ -268,16 +268,16 @@ function getChartOptions(type, limits) {
             yAxisOptions.min = 5.0; yAxisOptions.max = 8.0; yAxisOptions.ticks.stepSize = 0.5;
             break;
     }
-    
+
     if (limits) {
         annotations.safeZone = { type: 'box', yMin: limits.uw, yMax: limits.lw, backgroundColor: 'rgba(107, 114, 128, 0.15)', borderColor: 'transparent' };
         annotations.upperWarningZone = { type: 'box', yMin: limits.lw, yMax: limits.lm, backgroundColor: 'rgba(239, 68, 68, 0.2)', borderColor: 'transparent' };
         annotations.lowerWarningZone = { type: 'box', yMin: limits.um, yMax: limits.uw, backgroundColor: 'rgba(239, 68, 68, 0.2)', borderColor: 'transparent' };
-        
+
         annotations.limitMaxLine = { type: 'line', yMin: limits.lm, yMax: limits.lm, borderColor: '#ef4444', borderWidth: 2, label: { content: `Max Limit: ${limits.lm}`, enabled: true, position: 'end', backgroundColor: 'rgba(239, 68, 68, 0.7)', font: { weight: 'bold' } } };
         annotations.limitMinLine = { type: 'line', yMin: limits.um, yMax: limits.um, borderColor: '#ef4444', borderWidth: 2, label: { content: `Min Limit: ${limits.um}`, enabled: true, position: 'end', backgroundColor: 'rgba(239, 68, 68, 0.7)', font: { weight: 'bold' } } };
     }
-    
+
     yAxisOptions.title.text = yAxisLabel;
 
     return {
@@ -312,6 +312,6 @@ function getChartOptions(type, limits) {
 document.addEventListener('DOMContentLoaded', () => {
     updateDateTime();
     setInterval(updateDateTime, 1000);
-    
+
     loadPage();
 });
