@@ -62,7 +62,8 @@ function loadStatus() {
 
             fixedLocations.forEach(loc => {
                 const item = dataMap.get(loc);
-                let status = "UNKNOWN";
+                // let status = "UNKNOWN";
+                let status = "OK";
                 let timestamp = "-";
 
                 // Logika kini sederhana: hanya baca status dari server
