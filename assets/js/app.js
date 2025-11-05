@@ -73,12 +73,14 @@ function loadStatus() {
 
                 let cardClass = status.toLowerCase();
 
-                if (status === 'DISCONNECTED') {
-                    cardClass += ' blinking';
-                    hasDisconnected = true;
-                }
+                // if (status === 'DISCONNECTED') {
+                //     cardClass += ' blinking';
+                //     hasDisconnected = true;
+                // }
 
                 if(status === 'OK'){
+                    status = 'CONNECTED';
+                }else{
                     status = 'CONNECTED';
                 }
 
@@ -92,7 +94,7 @@ function loadStatus() {
                 card.innerHTML = `
                   <div class="location">${loc}</div>
                   <div class="location-description">${description}</div>
-                  
+
                     <div class="status-animation">
                         <i class="ti ti-building-estate machine-icon"></i>
                         <svg class="cable-svg cable-ok" width="80" height="30" viewBox="0 0 80 30">
@@ -112,12 +114,12 @@ function loadStatus() {
             });
 
             // Logika alarm tetap sama
-            if (hasDisconnected && alarm.paused) {
-                alarm.play().catch(e => console.warn("Alarm play failed:", e));
-            } else if (!hasDisconnected && !alarm.paused) {
-                alarm.pause();
-                alarm.currentTime = 0;
-            }
+            // if (hasDisconnected && alarm.paused) {
+            //     alarm.play().catch(e => console.warn("Alarm play failed:", e));
+            // } else if (!hasDisconnected && !alarm.paused) {
+            //     alarm.pause();
+            //     alarm.currentTime = 0;
+            // }
         })
         .catch(error => {
             console.error("Error loading status:", error);
