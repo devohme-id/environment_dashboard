@@ -134,12 +134,12 @@ function renderPage(pageNum, data) {
             isAnyAlarmActive = true;
         }
 
-        if (statusInfo.anomalySensors.length > 0) {
-            const anomalyMsg = document.createElement('div');
-            anomalyMsg.className = 'anomaly-message';
-            anomalyMsg.textContent = `Anomaly: ${statusInfo.anomalySensors.join(', ')} offline`;
-            titleEl.parentNode.insertBefore(anomalyMsg, titleEl.nextSibling);
-        }
+        // if (statusInfo.anomalySensors.length > 0) {
+        //     const anomalyMsg = document.createElement('div');
+        //     anomalyMsg.className = 'anomaly-message';
+        //     anomalyMsg.textContent = `Anomaly: ${statusInfo.anomalySensors.join(', ')} offline`;
+        //     titleEl.parentNode.insertBefore(anomalyMsg, titleEl.nextSibling);
+        // }
 
         for (const devid in chartConfig.devices) {
             const deviceName = chartConfig.devices[devid];
@@ -194,7 +194,7 @@ function getCardStatus(allData, deviceMap, limits, chartType) {
     const STALE_THRESHOLD_MINUTES = 65;
     const now = new Date();
 
-    let anomalySensors = [];
+    // let anomalySensors = [];
     let activeValues = [];
     const totalSensors = Object.keys(deviceMap).length;
 
@@ -202,42 +202,42 @@ function getCardStatus(allData, deviceMap, limits, chartType) {
         const deviceName = deviceMap[devid];
         const deviceData = allData[devid];
 
-        if (!deviceData || deviceData.length === 0) {
-            anomalySensors.push(deviceName);
-            continue;
-        }
+        // if (!deviceData || deviceData.length === 0) {
+        //     anomalySensors.push(deviceName);
+        //     continue;
+        // }
 
         const lastRecord = deviceData[deviceData.length - 1];
         const lastTimestamp = new Date(lastRecord.created_at);
         const ageInMinutes = (now - lastTimestamp) / (1000 * 60);
 
-        if (ageInMinutes > STALE_THRESHOLD_MINUTES) {
-            anomalySensors.push(deviceName);
-        } else {
-            let dataKey;
-            if (chartType === 'humidity') {
-                dataKey = 'humidity';
-            } else { // Covers 'temperature', 'temperature_solder', and 'pressure'
-                dataKey = 'temperature';
-            }
-            activeValues.push(parseFloat(lastRecord[dataKey]));
-        }
+        // if (ageInMinutes > STALE_THRESHOLD_MINUTES) {
+        //     anomalySensors.push(deviceName);
+        // } else {
+        //     let dataKey;
+        //     if (chartType === 'humidity') {
+        //         dataKey = 'humidity';
+        //     } else { // Covers 'temperature', 'temperature_solder', and 'pressure'
+        //         dataKey = 'temperature';
+        //     }
+        //     activeValues.push(parseFloat(lastRecord[dataKey]));
+        // }
     }
 
-    if (anomalySensors.length > 0) {
-        if (anomalySensors.length === totalSensors) {
-            return { status: 'anomaly', anomalySensors: ['All Sensors'] };
-        }
-        return { status: 'partial_anomaly', anomalySensors: anomalySensors };
-    }
+    // if (anomalySensors.length > 0) {
+    //     if (anomalySensors.length === totalSensors) {
+    //         return { status: 'anomaly', anomalySensors: ['All Sensors'] };
+    //     }
+    //     return { status: 'partial_anomaly', anomalySensors: anomalySensors };
+    // }
 
-    if (!activeValues.length || !limits) return { status: 'unknown', anomalySensors: [] };
+    // if (!activeValues.length || !limits) return { status: 'unknown', anomalySensors: [] };
 
-    let isDanger = activeValues.some(v => v > limits.lm || v < limits.um);
-    let isWarning = activeValues.some(v => (v > limits.lw && v <= limits.lm) || (v < limits.uw && v >= limits.um));
+    // let isDanger = activeValues.some(v => v > limits.lm || v < limits.um);
+    // let isWarning = activeValues.some(v => (v > limits.lw && v <= limits.lm) || (v < limits.uw && v >= limits.um));
 
-    if (isDanger) return { status: 'danger', anomalySensors: [] };
-    if (isWarning) return { status: 'warning', anomalySensors: [] };
+    // if (isDanger) return { status: 'danger', anomalySensors: [] };
+    // if (isWarning) return { status: 'warning', anomalySensors: [] };
     return { status: 'safe', anomalySensors: [] };
 }
 
