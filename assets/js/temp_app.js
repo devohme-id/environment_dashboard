@@ -1,6 +1,7 @@
-// Konfigurasi global untuk setiap halaman, kartu, dan perangkatnya
+// Konfigurasi global untuk setiap halaman
 const pageConfig = {
-    1: { // Halaman 1: SMT Lines
+    1: {
+        title: "SMT LINES MONITORING", // Judul Halaman
         charts: [
             { title: "SMT Line 1 Temperature", type: 'temperature', devices: { 1: "Top", 2: "Bottom" }, limits: { lm: 28, lw: 27, uw: 23, um: 22 } },
             { title: "SMT Line 2 Temperature", type: 'temperature', devices: { 4: "Top", 8: "Bottom" }, limits: { lm: 28, lw: 27, uw: 23, um: 22 } },
@@ -10,7 +11,8 @@ const pageConfig = {
             { title: "SMT Line 7 Temperature", type: 'temperature', devices: { 3: "Top", 7: "Bottom" }, limits: { lm: 28, lw: 27, uw: 23, um: 22 } }
         ]
     },
-    2: { // Halaman 2: Area & Storage
+    2: {
+        title: "AREA & STORAGE MONITORING",
         charts: [
             { title: "Material Humidity", type: 'humidity', devices: { 10: "Material" }, limits: { lm: 60, lw: 55, uw: 35, um: 30 } },
             { title: "IC Mapping Humidity", type: 'humidity', devices: { 11: "IC Mapping" }, limits: { lm: 60, lw: 55, uw: 35, um: 30 } },
@@ -20,7 +22,8 @@ const pageConfig = {
             { title: "Solder Paste Temperature", type: 'temperature_solder', devices: { 25: "Top", 26: "Bottom" }, limits: { lm: 8, lw: 7, uw: 3, um: 2 } }
         ]
     },
-    3: { // Halaman 3: Facility
+    3: {
+        title: "FACILITY MONITORING",
         charts: [
             { title: "Main Air Pressure", type: 'pressure', devices: { 100: "Main Air" }, limits: { lm: 7.5, lw: 7.0, uw: 6.0, um: 5.5 } },
             { title: "Stencil Room Temperature", type: 'temperature', devices: { 27: "Stencil Room" }, limits: { lm: 28, lw: 27, uw: 23, um: 22 } },
@@ -32,9 +35,33 @@ const pageConfig = {
 
 let activeCharts = [];
 let currentPage = 1;
-let refreshInterval;
 let alarmShouldBePlaying = false;
 const alarm = document.getElementById("alarmSound");
+
+// --- LOGIKA DROPDOWN ---
+function toggleDropdown() {
+    document.getElementById("nav-dropdown").classList.toggle("show");
+}
+
+// Tutup dropdown jika klik di luar
+window.onclick = function (event) {
+    if (!event.target.closest('.nav-btn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-menu");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
+
+function handleNavClick(pageNum) {
+    loadPage(pageNum);
+    // Tutup dropdown setelah klik
+    document.getElementById("nav-dropdown").classList.remove("show");
+}
+// -----------------------
 
 if (alarm) {
     alarm.addEventListener('ended', function () {
@@ -64,24 +91,37 @@ async function loadPage(pageNum = null) {
         currentPage = pageNum;
     }
 
+    // Update Judul Header
+    const pageData = pageConfig[currentPage];
+    const headerTitleEl = document.getElementById('header-title-text');
+    if (pageData && headerTitleEl) {
+        headerTitleEl.style.opacity = 0;
+        setTimeout(() => {
+            headerTitleEl.textContent = pageData.title;
+            headerTitleEl.style.opacity = 1;
+        }, 200);
+    }
+
+    // Update Active State di Dropdown
+    document.querySelectorAll('.dropdown-item').forEach(el => el.classList.remove('active-page'));
+    const activeLink = document.getElementById(`link-page-${currentPage}`);
+    if (activeLink) activeLink.classList.add('active-page');
+
     activeCharts.forEach(chart => chart.destroy());
     activeCharts = [];
 
+    // Reset kartu
     for (let i = 0; i < 6; i++) {
         const card = document.getElementById(`chart-card-${i + 1}`);
         if (card) {
             card.style.visibility = 'visible';
-            card.className = 'chart-card';
+            card.className = 'chart-card'; // Reset status classes
             const oldAnomalyMsg = card.querySelector('.anomaly-message');
             if (oldAnomalyMsg) oldAnomalyMsg.remove();
         }
         const title = document.getElementById(`chart-title-${i}`);
         if (title) title.textContent = 'Memuat Data...';
     }
-
-    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-    const activeBtn = document.getElementById(`btn-page-${currentPage}`);
-    if (activeBtn) activeBtn.classList.add('active');
 
     try {
         const response = await fetch(`get_temphygro_data.php?page=${currentPage}`);
@@ -145,12 +185,7 @@ function renderPage(pageNum, data) {
             const deviceName = chartConfig.devices[devid];
             const deviceData = data[devid] || [];
 
-            let dataKey;
-            if (chartConfig.type === 'humidity') {
-                dataKey = 'humidity';
-            } else { // Covers 'temperature', 'temperature_solder', and 'pressure'
-                dataKey = 'temperature';
-            }
+            let dataKey = (chartConfig.type === 'humidity') ? 'humidity' : 'temperature';
 
             const values = deviceData.map(d => parseFloat(d[dataKey]));
             chartData.datasets.push({
@@ -214,12 +249,7 @@ function getCardStatus(allData, deviceMap, limits, chartType) {
         if (ageInMinutes > STALE_THRESHOLD_MINUTES) {
             anomalySensors.push(deviceName);
         } else {
-            let dataKey;
-            if (chartType === 'humidity') {
-                dataKey = 'humidity';
-            } else { // Covers 'temperature', 'temperature_solder', and 'pressure'
-                dataKey = 'temperature';
-            }
+            let dataKey = (chartType === 'humidity') ? 'humidity' : 'temperature';
             activeValues.push(parseFloat(lastRecord[dataKey]));
         }
     }
@@ -244,10 +274,9 @@ function getCardStatus(allData, deviceMap, limits, chartType) {
 function getChartOptions(type, limits) {
     let yAxisLabel = 'Value';
 
-    // SETUP LIGHT MODE COLORS
-    const colorText = '#334155';      // Slate 700 for labels
-    const colorGrid = '#e2e8f0';      // Slate 200 for grid lines
-    const colorTitle = '#1e293b';     // Slate 800 for axis title
+    const colorText = '#334155';
+    const colorGrid = '#e2e8f0';
+    const colorTitle = '#1e293b';
 
     let yAxisOptions = {
         ticks: { color: colorText },
@@ -276,7 +305,6 @@ function getChartOptions(type, limits) {
     }
 
     if (limits) {
-        // Annotation background colors adjusted for light mode (more subtle)
         annotations.safeZone = { type: 'box', yMin: limits.uw, yMax: limits.lw, backgroundColor: 'rgba(34, 197, 94, 0.1)', borderColor: 'transparent' };
         annotations.upperWarningZone = { type: 'box', yMin: limits.lw, yMax: limits.lm, backgroundColor: 'rgba(239, 68, 68, 0.1)', borderColor: 'transparent' };
         annotations.lowerWarningZone = { type: 'box', yMin: limits.um, yMax: limits.uw, backgroundColor: 'rgba(239, 68, 68, 0.1)', borderColor: 'transparent' };
@@ -294,7 +322,6 @@ function getChartOptions(type, limits) {
             annotation: { drawTime: 'beforeDatasetsDraw', annotations: annotations },
             legend: { position: 'top', labels: { color: colorText, font: { size: 14 } } },
             tooltip: {
-                // Tooltip tetap gelap agar kontras tinggi
                 mode: 'index', intersect: false, backgroundColor: 'rgba(15, 23, 42, 0.9)', titleColor: '#ffffff',
                 bodyColor: '#cbd5e1', borderColor: '#334155', borderWidth: 1, padding: 10,
                 callbacks: {

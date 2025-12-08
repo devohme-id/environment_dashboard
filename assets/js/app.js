@@ -1,27 +1,30 @@
 // File: grounding_monitor/assets/js/app.js
 
-/**
- * Fungsi untuk memformat timestamp menjadi waktu relatif
+/** * LOGIKA DROPDOWN MENU
+ * Fungsi ini dipanggil saat tombol MENU diklik
  */
-function formatWaktuRelatif(timestampString) {
-    if (!timestampString || timestampString === "-") return "NO DATA";
-    const then = new Date(timestampString.replace(' ', 'T'));
-    const now = new Date();
+function toggleDropdown() {
+    const dropdown = document.getElementById("nav-dropdown");
+    if (dropdown) {
+        dropdown.classList.toggle("show");
+    }
+}
 
-    if (isNaN(then)) return "Invalid time";
-
-    const selisihDetik = Math.round((now - then) / 1000);
-    const selisihMenit = Math.round(selisihDetik / 60);
-
-    if (selisihDetik < 5) return "recently";
-    if (selisihDetik < 60) return `${selisihDetik} second ago`;
-    if (selisihMenit < 90) return `${selisihMenit} minute ago`;
-
-    return `Lebih dari 90 menit lalu`;
+// Event Listener Global untuk menutup dropdown saat klik di luar area menu
+window.onclick = function (event) {
+    if (!event.target.closest('.dropdown-container')) {
+        const dropdowns = document.getElementsByClassName("dropdown-menu");
+        for (let i = 0; i < dropdowns.length; i++) {
+            const openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
 }
 
 /**
- * Fungsi update jam header
+ * LOGIKA WAKTU & TANGGAL
  */
 function updateDateTime() {
     const now = new Date();
@@ -48,85 +51,81 @@ const locationDescriptions = {
     'LineProd_06': "LV 1 Machine GND"
 };
 
-/**
- * Fungsi utama memuat status dengan Logika 3 Tahap
- */
+function formatWaktuRelatif(timestampString) {
+    if (!timestampString || timestampString === "-") return "NO DATA";
+    const then = new Date(timestampString.replace(' ', 'T'));
+    const now = new Date();
+    if (isNaN(then)) return "Invalid time";
+
+    const selisihDetik = Math.round((now - then) / 1000);
+    const selisihMenit = Math.round(selisihDetik / 60);
+
+    if (selisihDetik < 5) return "recently";
+    if (selisihDetik < 60) return `${selisihDetik}s ago`; // Disingkat agar muat di card compact
+    if (selisihMenit < 90) return `${selisihMenit}m ago`;
+
+    return `> 90m ago`;
+}
+
 function loadStatus() {
-    // Gunakan nocache agar data selalu fresh dari server
     fetch('get_latest_status.php?nocache=' + new Date().getTime())
-        .then(res => res.ok ? res.json() : Promise.reject('Network response was not ok.'))
+        .then(res => res.ok ? res.json() : Promise.reject('Network error'))
         .then(data => {
             const grid = document.getElementById('monitor-grid');
             const alarm = document.getElementById("alarmSound");
-
             if (!grid) return;
+
+            // Jangan clear innerHTML total agar tidak flicker parah, tapi untuk simplicity kita reset
             grid.innerHTML = '';
 
             const dataMap = new Map(data.map(item => [item.line_id, item]));
-            let triggerAlarm = false; // Flag global untuk menyalakan alarm
-
+            let triggerAlarm = false;
             const now = new Date();
 
             fixedLocations.forEach(loc => {
                 const item = dataMap.get(loc);
-
                 let rawStatus = "UNKNOWN";
                 let timestamp = "-";
-                let diffSeconds = 999999; // Default nilai besar jika tidak ada data
+                let diffSeconds = 999999;
 
                 if (item) {
                     rawStatus = item.ground_status;
                     timestamp = item.timestamp;
-
                     const lastUpdate = new Date(timestamp.replace(' ', 'T'));
                     diffSeconds = (now - lastUpdate) / 1000;
                 }
 
-                // --- LOGIKA UTAMA ---
-                let visualClass = ''; // ok, warning, disconnected
+                let visualClass = '';
                 let displayStatus = '';
-
-                // Batas Waktu
-                const TIME_WARNING = 30;   // 30 detik (mulai jadi Orange)
-                const TIME_CRITICAL = 900; // 15 menit (mulai jadi Merah + Alarm)
+                const TIME_WARNING = 30;
+                const TIME_CRITICAL = 900;
 
                 if (!item) {
-                    // Kasus 1: Tidak ada data sama sekali di DB
                     visualClass = 'disconnected blinking';
                     displayStatus = 'DISCONNECTED';
                     triggerAlarm = true;
-                }
-                else if (rawStatus === 'DISCONNECTED') {
-                    // Kasus 2: DB eksplisit bilang DISCONNECTED (kabel putus tapi sensor masih kirim data)
+                } else if (rawStatus === 'DISCONNECTED') {
                     visualClass = 'disconnected';
                     displayStatus = 'FAULT';
                     triggerAlarm = true;
-                }
-                else if (diffSeconds >= TIME_CRITICAL) {
-                    // Kasus 3: Data basi > 15 menit
+                } else if (diffSeconds >= TIME_CRITICAL) {
                     visualClass = 'unknown blinking';
-                    displayStatus = 'ANOMALY SENSOR';
+                    displayStatus = 'ANOMALY'; // Teks dipendekkan
                     triggerAlarm = false;
-                }
-                else if (diffSeconds >= TIME_WARNING) {
-                    // Kasus 4: Data basi antara 30 det - 15 menit (Orange, Alarm Mati)
+                } else if (diffSeconds >= TIME_WARNING) {
                     visualClass = 'warning';
                     displayStatus = 'CONNECTED';
-                    // triggerAlarm TETAP FALSE
-                }
-                else {
-                    // Kasus 5: Data fresh (< 30 det) dan Status OK (Hijau)
+                } else {
                     visualClass = 'ok';
                     displayStatus = 'CONNECTED';
                 }
 
-                // Render Card
                 const card = document.createElement('div');
                 card.className = `card ${visualClass}`;
-
                 const waktuTampil = formatWaktuRelatif(timestamp);
                 const description = locationDescriptions[loc] || '';
 
+                // HTML Card yang sudah disesuaikan agar lebih compact
                 card.innerHTML = `
                   <div class="location">${loc}</div>
                   <div class="location-description">${description}</div>
@@ -134,19 +133,19 @@ function loadStatus() {
                     <div class="status-animation">
                         <i class="ti ti-building-estate machine-icon"></i>
 
-                        <!-- Kabel Putus (Merah) -->
-                        <svg class="cable-svg cable-error" width="80" height="30" viewBox="0 0 80 30" style="display: ${visualClass.includes('disconnected') ? 'block' : 'none'}">
+                        <!-- Kabel Putus -->
+                        <svg class="cable-svg cable-error" width="60" height="30" viewBox="0 0 80 30" style="display: ${visualClass.includes('disconnected') || visualClass.includes('unknown') ? 'block' : 'none'}">
                             <path class="cable-path" d="M 5,15 C 25,0 35,15 38,15"/>
                             <path class="cable-path" d="M 42,15 C 45,15 55,30 75,15"/>
                         </svg>
 
-                        <!-- Kabel Nyambung (Hijau) -->
-                        <svg class="cable-svg cable-ok" width="80" height="30" viewBox="0 0 80 30" style="display: ${visualClass === 'ok' ? 'block' : 'none'}">
+                        <!-- Kabel Nyambung -->
+                        <svg class="cable-svg cable-ok" width="60" height="30" viewBox="0 0 80 30" style="display: ${visualClass === 'ok' ? 'block' : 'none'}">
                             <path class="cable-path" d="M 5,15 C 25,0 55,30 75,15"/>
                         </svg>
 
-                        <!-- Kabel Warning/Waiting (Garis Putus-putus atau Lurus Orange) -->
-                        <svg class="cable-svg cable-warning" width="80" height="30" viewBox="0 0 80 30" style="display: ${visualClass === 'warning' ? 'block' : 'none'}">
+                        <!-- Kabel Warning -->
+                        <svg class="cable-svg cable-warning" width="60" height="30" viewBox="0 0 80 30" style="display: ${visualClass === 'warning' ? 'block' : 'none'}">
                              <path class="cable-path" stroke-dasharray="5,5" d="M 5,15 C 25,0 55,30 75,15"/>
                         </svg>
 
@@ -154,32 +153,28 @@ function loadStatus() {
                     </div>
 
                   <div class="status-text">${displayStatus}</div>
-                  <div class="timestamp" title="Terakhir: ${timestamp}">${waktuTampil}</div>
+                  <div class="timestamp">${waktuTampil}</div>
                 `;
                 grid.appendChild(card);
             });
 
-            // Kontrol Alarm
             if (triggerAlarm) {
-                if (alarm.paused) {
-                    alarm.play().catch(e => console.warn("Alarm play failed (need interaction):", e));
-                }
+                if (alarm.paused) alarm.play().catch(e => { });
             } else {
                 alarm.pause();
                 alarm.currentTime = 0;
             }
         })
         .catch(error => {
-            console.error("Error loading status:", error);
+            console.error(error);
             const grid = document.getElementById('monitor-grid');
-            if (grid) grid.innerHTML = `<div class="error-message">Connection Lost...</div>`;
+            if (grid) grid.innerHTML = `<div style="text-align:center; color:#ef4444; margin-top:50px;">Connection Lost...</div>`;
         });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     updateDateTime();
     setInterval(updateDateTime, 1000);
-
     loadStatus();
-    setInterval(loadStatus, 2000); // Cek setiap 2 detik
+    setInterval(loadStatus, 2000);
 });

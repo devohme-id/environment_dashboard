@@ -13,65 +13,67 @@
 
 <body>
 
-    <header>
-        <div class="header-title">
-            ENVIRONMENT MONITORING
+    <header class="header-ui">
+        <!-- Bagian Tengah: Judul (Absolute Center) -->
+        <div class="header-center">
+            <div class="header-title" id="header-title-text">
+                ENVIRONMENT MONITORING
+            </div>
         </div>
-        <nav>
-            <button id="btn-page-1" class="nav-btn active" onclick="loadPage(1)">SMT Lines</button>
-            <button id="btn-page-2" class="nav-btn" onclick="loadPage(2)">Area & Storage</button>
-            <button id="btn-page-3" class="nav-btn" onclick="loadPage(3)">Facility</button>
-            <a href="grounding_monitor.php" class="nav-btn" style="text-decoration: none;" rel="noreferrer nofollow" target="_top">Grounding</a>
-        </nav>
-        <div id="datetime-container">
-            <div id="time-display"></div>
-            <div id="date-display"></div>
+
+        <!-- Bagian Kanan: Menu & Jam -->
+        <div class="header-right">
+
+            <!-- Dropdown Menu -->
+            <div class="dropdown-container">
+                <button class="nav-btn" onclick="toggleDropdown()">
+                    <span>MENU</span>
+                    <!-- Icon Panah Bawah -->
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 9l6 6 6-6" />
+                    </svg>
+                </button>
+                <div id="nav-dropdown" class="dropdown-menu">
+                    <a href="#" class="dropdown-item" onclick="handleNavClick(1); return false;" id="link-page-1">SMT Lines</a>
+                    <a href="#" class="dropdown-item" onclick="handleNavClick(2); return false;" id="link-page-2">Area & Storage</a>
+                    <a href="#" class="dropdown-item" onclick="handleNavClick(3); return false;" id="link-page-3">Facility</a>
+                    <div style="border-top: 1px solid #fce7f3; margin: 4px 0;"></div>
+                    <a href="grounding_monitor.php" class="dropdown-item" target="_top">Grounding Monitor</a>
+                </div>
+            </div>
+
+            <div class="header-clock">
+                <div id="time-display" class="clock-time"></div>
+                <div id="date-display" class="clock-date"></div>
+            </div>
         </div>
     </header>
 
     <main>
         <div class="chart-grid" id="chart-grid">
-            <!-- Kartu 1 -->
             <div class="chart-card" id="chart-card-1">
                 <h2 id="chart-title-0">Memuat Data...</h2>
-                <div class="chart-container">
-                    <canvas id="chart-0"></canvas>
-                </div>
+                <div class="chart-container"><canvas id="chart-0"></canvas></div>
             </div>
-            <!-- Kartu 2 -->
             <div class="chart-card" id="chart-card-2">
                 <h2 id="chart-title-1">Memuat Data...</h2>
-                <div class="chart-container">
-                    <canvas id="chart-1"></canvas>
-                </div>
+                <div class="chart-container"><canvas id="chart-1"></canvas></div>
             </div>
-            <!-- Kartu 3 -->
             <div class="chart-card" id="chart-card-3">
                 <h2 id="chart-title-2">Memuat Data...</h2>
-                <div class="chart-container">
-                    <canvas id="chart-2"></canvas>
-                </div>
+                <div class="chart-container"><canvas id="chart-2"></canvas></div>
             </div>
-            <!-- Kartu 4 -->
             <div class="chart-card" id="chart-card-4">
                 <h2 id="chart-title-3">Memuat Data...</h2>
-                <div class="chart-container">
-                    <canvas id="chart-3"></canvas>
-                </div>
+                <div class="chart-container"><canvas id="chart-3"></canvas></div>
             </div>
-            <!-- Kartu 5 -->
             <div class="chart-card" id="chart-card-5">
                 <h2 id="chart-title-4">Memuat Data...</h2>
-                <div class="chart-container">
-                    <canvas id="chart-4"></canvas>
-                </div>
+                <div class="chart-container"><canvas id="chart-4"></canvas></div>
             </div>
-            <!-- Kartu 6 -->
             <div class="chart-card" id="chart-card-6">
                 <h2 id="chart-title-5">Memuat Data...</h2>
-                <div class="chart-container">
-                    <canvas id="chart-5"></canvas>
-                </div>
+                <div class="chart-container"><canvas id="chart-5"></canvas></div>
             </div>
         </div>
     </main>
@@ -79,37 +81,21 @@
     <footer>
         <div class="footer-left">
             <div class="legend">
-                <div class="legend-item">
-                    <span class="legend-box status-safe"></span>
-                    <span>SAFE</span>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-box status-warning"></span>
-                    <span>WARNING</span>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-box status-danger"></span>
-                    <span>DANGER</span>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-box status-anomaly"></span>
-                    <span>ANOMALY SENSOR</span>
-                </div>
+                <div class="legend-item"><span class="legend-box status-safe"></span><span>SAFE</span></div>
+                <div class="legend-item"><span class="legend-box status-warning"></span><span>WARNING</span></div>
+                <div class="legend-item"><span class="legend-box status-danger"></span><span>DANGER</span></div>
+                <div class="legend-item"><span class="legend-box status-anomaly"></span><span>ANOMALY</span></div>
             </div>
             <div class="info-ranges">
-                <span>Temperature : 22 ~ 28°C</span> |
-                <span>Humidity : 30 ~ 60%</span> |
-                <span>Air Pressure : 5.5 ~ 7.5 KGF/CM²</span>
+                <span>Temp: 22~28°C</span> | <span>Hum: 30~60%</span> | <span>Press: 5.5~7.5 KGF/CM²</span>
             </div>
         </div>
         <div class="info-note">
-            Status is updated automatically. Alarm and blinking animation are active only during a limit breach.
+            Status updated automatically. Alarm active during limit breach.
         </div>
     </footer>
 
-    <!-- ### PERUBAHAN: Atribut 'loop' dihapus ### -->
     <audio id="alarmSound" src="assets/alarm.wav" preload="auto"></audio>
-
     <script src="assets/js/temp_app.js"></script>
 
 </body>
