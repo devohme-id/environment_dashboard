@@ -21,8 +21,10 @@ html {
 body {
     margin: 0;
     font-family: 'MyFontText', sans-serif;
-    background: #0f172a;
-    color: #ffffff;
+    background: #f1f5f9;
+    /* LIGHT MODE BG */
+    color: #1e293b;
+    /* DARK TEXT */
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -30,9 +32,10 @@ body {
 }
 
 header {
-    background: #1e293b;
+    background: #ffffff;
+    /* WHITE HEADER */
     padding: 15px 40px;
-    border-bottom: 3px solid #334155;
+    border-bottom: 3px solid #cbd5e1;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -40,6 +43,7 @@ header {
     flex-wrap: wrap;
     gap: 15px;
     z-index: 10;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .header-title {
@@ -47,6 +51,7 @@ header {
     font-size: 1.8em;
     font-weight: bold;
     letter-spacing: 2px;
+    color: #0f172a;
 }
 
 nav {
@@ -57,9 +62,10 @@ nav {
 
 .nav-btn {
     font-family: 'MyFontHeadline', sans-serif;
-    background-color: #334155;
-    color: #cbd5e1;
-    border: none;
+    background-color: #e2e8f0;
+    /* Light Gray Button */
+    color: #475569;
+    border: 1px solid #cbd5e1;
     padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
@@ -68,15 +74,18 @@ nav {
 }
 
 .nav-btn:hover {
-    background-color: #475569;
+    background-color: #cbd5e1;
+    color: #1e293b;
     transform: translateY(-2px);
 }
 
 .nav-btn.active {
-    background-color: #38bdf8;
+    background-color: #0284c7;
+    /* Sky Blue Darker */
     color: #ffffff;
     font-weight: bold;
-    box-shadow: 0 0 10px #38bdf880;
+    border-color: #0284c7;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 #datetime-container {
@@ -88,11 +97,13 @@ nav {
     font-family: 'MyFontHeadline', sans-serif;
     font-size: 2em;
     letter-spacing: 2px;
+    color: #1e293b;
 }
 
 #date-display {
     font-size: 1em;
-    color: #cbd5e1;
+    color: #64748b;
+    /* Muted Text */
 }
 
 main {
@@ -113,45 +124,53 @@ main {
 }
 
 .chart-card {
-    background: #1e293b;
+    background: #ffffff;
+    /* WHITE CARD */
     border-radius: 16px;
     padding: 20px 25px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    border-left: 10px solid #64748b;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-left: 10px solid #94a3b8;
     transition: transform 0.3s, box-shadow 0.3s, border-left-color 0.5s;
+    border-top: 1px solid #f1f5f9;
+    border-right: 1px solid #f1f5f9;
+    border-bottom: 1px solid #f1f5f9;
 }
 
 .chart-card.status-safe {
-    border-left-color: #4ade80;
+    border-left-color: #22c55e;
 }
 
 .chart-card.status-warning {
-    border-left-color: #facc15;
-    background-color: #422006;
+    border-left-color: #eab308;
+    background-color: #fefce8;
+    /* Very pale yellow */
 }
 
 .chart-card.status-danger {
     border-left-color: #ef4444;
-    background-color: #450a0a;
+    background-color: #fef2f2;
+    /* Very pale red */
 }
 
 .chart-card.status-unknown {
-    border-left-color: #64748b;
+    border-left-color: #94a3b8;
 }
 
 .chart-card.status-anomaly {
-    border-left-color: #a78bfa;
-    background-color: #2e1065;
+    border-left-color: #8b5cf6;
+    background-color: #faf5ff;
+    /* Very pale purple */
 }
 
 .chart-card.status-partial_anomaly {
-    border-left-color: #f59e0b;
-    background-color: #4a2c0d;
+    border-left-color: #f97316;
+    background-color: #fff7ed;
+    /* Very pale orange */
 }
 
-/* ### ANIMASI BLINKING DIPERBARUI ### */
+/* ### ANIMASI BLINKING (COLORS UPDATED FOR LIGHT MODE) ### */
 .chart-card.status-danger.blinking {
     animation: blink-danger 1s infinite;
 }
@@ -168,57 +187,66 @@ main {
     animation: blink-partial-anomaly 1s infinite;
 }
 
+/* Menggunakan warna pastel untuk background blinking agar teks tetap terbaca */
 @keyframes blink-danger {
 
     0%,
     100% {
-        background-color: #450a0a;
+        background-color: #fef2f2;
     }
 
     50% {
-        background-color: #7f1d1d;
+        background-color: #fca5a5;
     }
+
+    /* Red 300 */
 }
 
 @keyframes blink-warning {
 
     0%,
     100% {
-        background-color: #422006;
+        background-color: #fefce8;
     }
 
     50% {
-        background-color: #78350f;
+        background-color: #fde047;
     }
+
+    /* Yellow 300 */
 }
 
 @keyframes blink-anomaly {
 
     0%,
     100% {
-        background-color: #2e1065;
+        background-color: #faf5ff;
     }
 
     50% {
-        background-color: #4c1d95;
+        background-color: #d8b4fe;
     }
+
+    /* Purple 300 */
 }
 
 @keyframes blink-partial-anomaly {
 
     0%,
     100% {
-        background-color: #4a2c0d;
+        background-color: #fff7ed;
     }
 
     50% {
-        background-color: #7c3a0a;
+        background-color: #fdba74;
     }
+
+    /* Orange 300 */
 }
 
 .chart-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .chart-card h2 {
@@ -226,11 +254,14 @@ main {
     font-family: 'MyFontHeadline', sans-serif;
     font-size: 1.4em;
     text-align: center;
-    color: #e2e8f0;
+    color: #1e293b;
+    /* Dark Heading */
 }
 
 .anomaly-message {
-    color: #fcd34d;
+    color: #b45309;
+    /* Dark Orange text */
+    font-weight: bold;
     font-style: italic;
     text-align: center;
     margin-bottom: 15px;
@@ -244,7 +275,7 @@ main {
 }
 
 .error-message {
-    color: #fca5a5;
+    color: #dc2626;
     padding: 20px;
     text-align: center;
     font-size: 1.1em;
@@ -257,10 +288,10 @@ main {
 }
 
 footer {
-    background: #1e293b;
-    color: #cbd5e1;
+    background: #ffffff;
+    color: #475569;
     padding: 15px 40px;
-    border-top: 3px solid #334155;
+    border-top: 3px solid #cbd5e1;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -288,18 +319,19 @@ footer {
     align-items: center;
     gap: 8px;
     font-size: 1em;
+    color: #1e293b;
 }
 
 .legend-box {
     width: 18px;
     height: 18px;
     border-radius: 4px;
-    border: 2px solid #334155;
+    border: 1px solid #94a3b8;
     flex-shrink: 0;
 }
 
 .legend-box.status-safe {
-    background-color: #4ade80;
+    background-color: #22c55e;
 }
 
 .legend-box.status-warning {
@@ -316,19 +348,18 @@ footer {
 
 .info-ranges {
     font-size: 1em;
-    color: #cbd5e1;
+    color: #334155;
+    font-weight: 500;
 }
-
-/* .info-ranges span {
-    color: #e2e8f0;
-} */
 
 .info-note {
     font-size: 0.9em;
     font-style: italic;
     text-align: right;
+    color: #64748b;
 }
 
+/* Responsiveness tetap sama */
 @media (max-width: 1200px) {
     header {
         justify-content: center;
