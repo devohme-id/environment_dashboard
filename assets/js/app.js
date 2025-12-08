@@ -4,7 +4,7 @@
  * Fungsi untuk memformat timestamp menjadi waktu relatif
  */
 function formatWaktuRelatif(timestampString) {
-    if (!timestampString || timestampString === "-") return "No data";
+    if (!timestampString || timestampString === "-") return "NO DATA";
     const then = new Date(timestampString.replace(' ', 'T'));
     const now = new Date();
 
@@ -13,9 +13,9 @@ function formatWaktuRelatif(timestampString) {
     const selisihDetik = Math.round((now - then) / 1000);
     const selisihMenit = Math.round(selisihDetik / 60);
 
-    if (selisihDetik < 5) return "Baru saja";
-    if (selisihDetik < 60) return `${selisihDetik} detik lalu`;
-    if (selisihMenit < 90) return `${selisihMenit} menit lalu`;
+    if (selisihDetik < 5) return "recently";
+    if (selisihDetik < 60) return `${selisihDetik} second ago`;
+    if (selisihMenit < 90) return `${selisihMenit} minute ago`;
 
     return `Lebih dari 90 menit lalu`;
 }
@@ -93,25 +93,25 @@ function loadStatus() {
                 if (!item) {
                     // Kasus 1: Tidak ada data sama sekali di DB
                     visualClass = 'disconnected blinking';
-                    displayStatus = 'NO DATA';
+                    displayStatus = 'DISCONNECTED';
                     triggerAlarm = true;
                 }
                 else if (rawStatus === 'DISCONNECTED') {
                     // Kasus 2: DB eksplisit bilang DISCONNECTED (kabel putus tapi sensor masih kirim data)
-                    visualClass = 'disconnected blinking';
-                    displayStatus = 'DISCONNECTED';
+                    visualClass = 'disconnected';
+                    displayStatus = 'FAULT';
                     triggerAlarm = true;
                 }
                 else if (diffSeconds >= TIME_CRITICAL) {
-                    // Kasus 3: Data basi > 5 menit (Merah + Alarm)
-                    visualClass = 'disconnected blinking';
-                    displayStatus = 'NO SIGNAL';
-                    triggerAlarm = true;
+                    // Kasus 3: Data basi > 15 menit
+                    visualClass = 'unknown blinking';
+                    displayStatus = 'ANOMALY SENSOR';
+                    triggerAlarm = false;
                 }
                 else if (diffSeconds >= TIME_WARNING) {
-                    // Kasus 4: Data basi antara 30 det - 5 menit (Orange, Alarm Mati)
+                    // Kasus 4: Data basi antara 30 det - 15 menit (Orange, Alarm Mati)
                     visualClass = 'warning';
-                    displayStatus = 'WAITING...';
+                    displayStatus = 'CONNECTED';
                     // triggerAlarm TETAP FALSE
                 }
                 else {
@@ -122,7 +122,7 @@ function loadStatus() {
 
                 // Render Card
                 const card = document.createElement('div');
-                card.className = `card ${visualClass}`; // visualClass akan jadi 'ok', 'warning', atau 'disconnected blinking'
+                card.className = `card ${visualClass}`;
 
                 const waktuTampil = formatWaktuRelatif(timestamp);
                 const description = locationDescriptions[loc] || '';

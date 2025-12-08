@@ -13,7 +13,7 @@
     font-style: normal;
 }
 
-/* --- PERBAIKAN: Gunakan Flexbox untuk layout utama --- */
+/* --- Layout Utama --- */
 body {
     margin: 0;
     font-family: 'MyFontText', sans-serif;
@@ -24,7 +24,6 @@ body {
     min-height: 100vh;
 }
 
-/* ### CSS HEADER DIPERBARUI ### */
 header {
     padding: 15px 40px;
     background: #1e293b;
@@ -59,7 +58,6 @@ header {
     color: #cbd5e1;
 }
 
-/* --- PERBAIKAN: Biarkan grid tumbuh mengisi ruang --- */
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -85,13 +83,25 @@ header {
     letter-spacing: 1px;
 }
 
+/* === COLORS === */
+
+/* Status OK: Hijau Terang (Neon) */
 .card.ok {
     border-left-color: #22c55e;
 }
 
+/* Status Warning: Hijau Redup (Dark Green / Dim) */
+.card.warning {
+    border-left-color: #15803d;
+    /* Hijau tua */
+    /* Opsional: background sedikit diubah jika mau, tapi default card bg lebih rapi */
+}
+
+/* Status Disconnected: Merah */
 .card.disconnected {
     border-left-color: #ef4444;
-    background: #7f1d1d;
+    background: #450a0a;
+    /* Background merah sangat gelap agar teks tetap terbaca */
 }
 
 .card.unknown {
@@ -107,12 +117,15 @@ header {
 
     0%,
     100% {
+        background-color: #450a0a;
+    }
+
+    /* Merah Gelap */
+    50% {
         background-color: #7f1d1d;
     }
 
-    50% {
-        background-color: #b91c1c;
-    }
+    /* Merah Agak Terang */
 }
 
 .location {
@@ -123,14 +136,12 @@ header {
 .location-description {
     font-size: 1.2em;
     color: #94a3b8;
-    /* PERUBAHAN: Margin disesuaikan */
     margin-top: 5px;
     margin-bottom: 15px;
 }
 
-
 /* =====================================================
---- CSS ANIMASI STATUS ---
+   CSS ANIMASI & ICON
 ===================================================== */
 
 .status-animation {
@@ -157,24 +168,54 @@ header {
     fill: none;
 }
 
-/* === Status OK === */
-.card.ok .cable-error {
+/* --- Status OK (Bright Green) --- */
+.card.ok .cable-error,
+.card.ok .cable-warning {
     display: none;
 }
 
 .card.ok .device-icon,
 .card.ok .machine-icon {
-    color: #28a745;
+    color: #22c55e;
 }
 
 .card.ok .cable-ok .cable-path {
-    stroke: #28a745;
+    stroke: #22c55e;
     stroke-dasharray: 8 8;
     animation: flow 1s linear infinite;
 }
 
-/* === Status Selain OK === */
-.card:not(.ok) .cable-ok {
+/* --- Status Warning (Dim Green) --- */
+/* Sembunyikan kabel lain */
+.card.warning .cable-error,
+.card.warning .cable-ok {
+    display: none;
+}
+
+.card.warning .cable-warning .cable-path {
+    stroke: #15803d;
+    stroke-dasharray: 8 8;
+    animation: flow 1s linear infinite;
+}
+
+/* Icon warna hijau tua/redup */
+.card.warning .device-icon,
+.card.warning .machine-icon {
+    color: #15803d;
+    opacity: 0.7;
+}
+
+/* Kabel putus-putus diam warna hijau tua */
+.card.warning .cable-warning .cable-path {
+    stroke: #15803d;
+    opacity: 0.5;
+    /* Membuatnya terlihat redup */
+    stroke-dasharray: 4 4;
+}
+
+/* --- Status Disconnected (Red) --- */
+.card.disconnected .cable-ok,
+.card.disconnected .cable-warning {
     display: none;
 }
 
@@ -187,6 +228,7 @@ header {
     stroke: #ef4444;
 }
 
+/* --- Status Unknown --- */
 .card.unknown .device-icon,
 .card.unknown .machine-icon {
     color: #94a3b8;
@@ -196,11 +238,11 @@ header {
     stroke: #94a3b8;
 }
 
-.card:not(.ok) .cable-error {
+/* Animasi Error Pulse */
+.card.disconnected .cable-error {
     animation: pulse-error 1.5s ease-in-out infinite;
 }
 
-/* Keyframes */
 @keyframes flow {
     from {
         stroke-dashoffset: 0;
@@ -226,20 +268,17 @@ header {
 }
 
 /* =====================================================
---- PERUBAHAN: CSS BARU UNTUK TEKS STATUS ---
+   TEKS STATUS
 ===================================================== */
 
 .status-text {
     font-size: 1.0em;
-    /* Dibuat kecil */
     font-weight: bold;
     margin-top: 10px;
-    /* Jarak dari animasi di atasnya */
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-/* Mewarnai teks status sesuai kondisi card */
 .card.ok .status-text {
     color: #22c55e;
 }
@@ -252,19 +291,20 @@ header {
     color: #94a3b8;
 }
 
-/* =====================================================
---- AKHIR PERUBAHAN ---
-===================================================== */
+/* Warna Teks Warning: Hijau Redup */
+.card.warning .status-text {
+    color: #15803d;
+    opacity: 0.8;
+}
 
 .timestamp {
     font-size: 1.4em;
     color: #cbd5e1;
-    /* PERUBAHAN: Margin disesuaikan */
     margin-top: 15px;
     font-style: italic;
 }
 
-/* --- Footer Styles --- */
+/* --- Footer --- */
 footer {
     background: #1e293b;
     color: #cbd5e1;
@@ -288,16 +328,10 @@ footer {
     flex-wrap: wrap;
 }
 
-legend-item {
+.legend-item {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 1em;
-}
-
-.legend div {
-    display: flex;
-    align-items: center;
     font-size: 1em;
 }
 
@@ -321,13 +355,18 @@ legend-item {
     background-color: #94a3b8;
 }
 
+/* Legend Box Warning: Hijau Tua */
+.legend-box.warning {
+    background-color: #15803d;
+}
+
 .note {
     font-size: 0.9em;
     font-style: italic;
     text-align: right;
 }
 
-/* --- Responsive Adjustments --- */
+/* --- Responsive --- */
 @media (max-width: 1200px) {
     .grid {
         grid-template-columns: repeat(2, 1fr);
@@ -345,24 +384,13 @@ legend-item {
         gap: 20px;
     }
 
-    header {
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
-    }
-
-    #datetime-container {
-        text-align: center;
-    }
-
-    footer {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
+    header,
+    #datetime-container,
+    footer,
     .note {
+        flex-direction: column;
         text-align: center;
+        align-items: center;
     }
 }
 
@@ -387,11 +415,4 @@ nav {
 .nav-btn:hover {
     background-color: #475569;
     transform: translateY(-2px);
-}
-
-.nav-btn.active {
-    background-color: #38bdf8;
-    color: #ffffff;
-    font-weight: bold;
-    box-shadow: 0 0 10px #38bdf880;
 }
