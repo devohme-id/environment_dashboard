@@ -5,9 +5,30 @@
     <meta charset="UTF-8">
     <title>Grounding Monitoring System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <link rel="stylesheet" href="assets/css/tabler-icons.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Tambahan Style untuk Status WARNING (Orange) */
+        .card.warning {
+            border-left: 5px solid #ff9800;
+            /* Light Orange Background */
+            color: #e65100;
+        }
+
+        .card.warning .status-text {
+            color: #ef6c00;
+        }
+
+        .card.warning .cable-path {
+            stroke: #ff9800;
+            /* Warna kabel jadi orange */
+        }
+
+        .legend-box.warning {
+            background-color: #ff9800;
+        }
+    </style>
 </head>
 
 <body>
@@ -32,6 +53,10 @@
             <div class="legend-item">
                 <span class="legend-box ok"></span>
                 <span style="margin-left:6px">Ground path is <strong>normal</strong>.</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-box warning"></span>
+                <span style="margin-left:6px">Ground path is <strong>waiting</strong>.</span>
             </div>
             <div class="legend-item">
                 <span class="legend-box disconnected"></span>
