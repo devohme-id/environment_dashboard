@@ -1,13 +1,8 @@
-/* File: assets/css/temp_style.css */
-
-/* ==========================================================================
-   Base Styles & Theming
-   ========================================================================== */
 :root {
     --brand-red: #c51a72;
     --bg-color: #f1f5f9;
     --card-bg: #ffffff;
-    --card-border: #e2e8f0;
+    --card-border: #cbd5e1;
     --text-main: #0f172a;
     --text-muted: #334155;
     --text-light: #64748b;
@@ -34,21 +29,23 @@
     font-style: normal;
 }
 
-html,
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     height: 100%;
-    margin: 0;
     font-family: 'MyFontText', sans-serif;
     background: var(--bg-color);
     color: var(--text-main);
     display: flex;
     flex-direction: column;
-    height: 100%;
     overflow: hidden;
 }
 
-/* --- HEADER UI (REVISI RESPONSIVE) --- */
-header.header-ui {
+.header-ui {
     flex-shrink: 0;
     height: 70px;
     background: #ffffff;
@@ -59,18 +56,19 @@ header.header-ui {
     display: flex;
     align-items: center;
     padding: 0 1.5rem;
-    justify-content: flex-end;
 }
 
-.header-center {
+.header-left {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    z-index: 0;
-    width: 100%;
-    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: auto;
 }
 
 .header-title {
@@ -80,8 +78,6 @@ header.header-ui {
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--brand-red);
-    /* white-space: nowrap; */
-    pointer-events: auto;
     line-height: 1;
     margin: 0;
 }
@@ -96,23 +92,16 @@ header.header-ui {
     margin-top: 2px;
 }
 
-/* Area Kanan (Menu & Clock) */
 .header-right {
+    margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 15px;
-    position: relative;
-    z-index: 10;
+    gap: 1.5rem;
 }
 
 .header-clock {
+    font-family: 'MyFontHeadline', sans-serif;
     text-align: right;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-width: 110px;
-    padding-left: 15px;
-    border-left: 1px solid var(--card-border);
 }
 
 .clock-time {
@@ -125,88 +114,163 @@ header.header-ui {
 }
 
 .clock-date {
-    font-size: 0.71rem;
+    font-size: 0.75rem;
     color: var(--text-light);
     font-weight: 600;
     margin-top: 2px;
     text-transform: uppercase;
 }
 
+.nav-menu {
+    display: flex;
+    gap: 1rem;
+    height: 100%;
+    align-items: center;
+    position: relative;
+}
+
 .dropdown-container {
     position: relative;
-    display: inline-block;
 }
 
-.nav-btn {
-    font-family: 'MyFontHeadline', sans-serif;
-    background-color: #ffffff;
-    color: var(--text-muted);
-    border: 1px solid var(--card-border);
-    border-radius: 6px;
-    cursor: pointer;
-    width: auto;
-    height: 38px;
-    padding: 0 16px;
+.dropdown-toggle {
     display: flex;
     align-items: center;
-    gap: 8px;
-    transition: all 0.2s;
-    font-size: 0.95em;
-    font-weight: bold;
-}
-
-.nav-btn:hover {
-    background-color: #fff1f2;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-family: 'MyFontHeadline', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
     color: var(--brand-red);
-    border-color: var(--brand-red);
+    background-color: transparent;
+    border: 2px solid var(--brand-red);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.nav-btn svg {
-    width: 18px;
-    height: 18px;
+.dropdown-toggle:hover {
+    background-color: var(--brand-red);
+    color: white;
 }
 
-/* Dropdown Menu (Posisi diperbaiki) */
 .dropdown-menu {
     display: none;
     position: absolute;
-    top: 120%;
+    top: 100%;
     right: 0;
-    background-color: #ffffff;
     min-width: 220px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
     border: 1px solid var(--card-border);
-    border-radius: 8px;
-    z-index: 1000;
-    overflow: hidden;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    flex-direction: column;
+    z-index: 100;
+    margin-top: 10px;
 }
 
+.dropdown-menu::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: transparent;
+}
+
+.dropdown-container:hover .dropdown-menu,
 .dropdown-menu.show {
-    display: block;
-    animation: fadeIn 0.2s ease-out;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    display: flex;
 }
 
 .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-family: 'MyFontHeadline', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: var(--text-main);
-    padding: 12px 16px;
     text-decoration: none;
-    display: block;
-    font-size: 0.95em;
-    border-bottom: 1px solid #f1f5f9;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
 }
 
 .dropdown-item:hover {
-    background-color: #f8fafc;
+    background-color: rgba(197, 26, 114, 0.05);
     color: var(--brand-red);
 }
 
 .dropdown-item.active-page {
     background-color: #fef2f2;
     color: var(--brand-red);
-    font-weight: bold;
+    font-weight: 800;
     border-left: 3px solid var(--brand-red);
+}
+
+.sound-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    outline: none;
+}
+
+.sound-btn:hover {
+    color: #475569;
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+}
+
+.sound-btn.active {
+    background-color: #fff1f2;
+    border: 1px solid #fecdd3 !important;
+    color: var(--brand-red);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.sound-btn.active:hover {
+    background-color: #ffe4e6;
+    border-color: #fecdd3;
+}
+
+#audio-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.sound-btn:not(.muted) {
+    color: #475569;
+    border-color: #cbd5e1;
+}
+
+#audio-icon-container svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    stroke-width: 2;
+}
+
+.sound-btn.muted .unmuted-icon {
+    display: none;
+}
+
+.sound-btn:not(.muted) .muted-icon {
+    display: none;
 }
 
 @keyframes fadeIn {
@@ -221,7 +285,6 @@ header.header-ui {
     }
 }
 
-/* --- GRID & CARDS --- */
 main {
     flex-grow: 1;
     padding: 15px;
@@ -253,8 +316,6 @@ main {
     height: 100%;
     box-sizing: border-box;
 }
-
-/* --- Status Colors & Animations --- */
 
 .chart-card.status-safe {
     border-left-color: #4ade80;
@@ -296,75 +357,58 @@ main {
     animation: blink-partial-anomaly 1s infinite;
 }
 
-/* Merah Muda Cerah (Danger) */
 @keyframes blink-danger {
 
     0%,
     100% {
         background-color: #fee2e2;
-        /* Red 100 */
         color: #991b1b;
-        /* Text color suggestion: Dark Red */
     }
 
     50% {
         background-color: #fca5a5;
-        /* Red 300 */
     }
 }
 
-/* Kuning/Amber Cerah (Warning) */
 @keyframes blink-warning {
 
     0%,
     100% {
         background-color: #fef3c7;
-        /* Amber 100 */
         color: #92400e;
-        /* Text color suggestion: Dark Amber */
     }
 
     50% {
         background-color: #fcd34d;
-        /* Amber 300 */
     }
 }
 
-/* Ungu Muda (Anomaly) */
 @keyframes blink-anomaly {
 
     0%,
     100% {
         background-color: #f3e8ff;
-        /* Purple 100 */
         color: #6b21a8;
-        /* Text color suggestion: Dark Purple */
     }
 
     50% {
         background-color: #d8b4fe;
-        /* Purple 300 */
     }
 }
 
-/* Oranye Cerah (Partial Anomaly) */
 @keyframes blink-partial-anomaly {
 
     0%,
     100% {
         background-color: #ffedd5;
-        /* Orange 100 */
         color: #9a3412;
-        /* Text color suggestion: Dark Orange */
     }
 
     50% {
         background-color: #fdba74;
-        /* Orange 300 */
     }
 }
 
-/* Unknown (Gray) */
 .chart-card.status-unknown {
     border-left-color: var(--text-muted);
 }
@@ -398,7 +442,6 @@ main {
     text-align: center;
 }
 
-/* Footer */
 footer {
     background: #ffffff;
     color: var(--text-main);
@@ -470,10 +513,7 @@ footer {
     max-width: 400px;
 }
 
-/* --- RESPONSIVE / MOBILE MEDIA QUERY --- */
 @media (max-width: 900px) {
-
-    /* Header berubah menjadi Stack (Atas-Bawah) */
     header.header-ui {
         height: auto;
         padding: 15px 20px;
@@ -482,7 +522,6 @@ footer {
         gap: 12px;
     }
 
-    /* Judul Kembali ke Flow Normal (Tidak Absolute) */
     .header-center {
         position: static;
         transform: none;
@@ -492,36 +531,28 @@ footer {
 
     .header-title {
         font-size: 1.3em;
-        /* Font lebih kecil di mobile */
         white-space: normal;
-        /* Allow wrap if needed */
     }
 
-    /* Kanan (Menu & Jam) di bawah judul, centered */
     .header-right {
         width: 100%;
         justify-content: space-between;
-        /* Jam kiri, Menu kanan atau sebaliknya */
     }
 
     .header-clock {
         text-align: left;
-        /* Jam di kiri */
         padding-left: 0;
         border-left: none;
         align-items: flex-start;
     }
 
     .dropdown-menu {
-        /* Pastikan menu tidak keluar layar */
         right: 0;
         min-width: 200px;
     }
 
-    /* Grid Panel Mobile */
     .chart-grid {
         grid-template-columns: 1fr;
-        /* 1 Kolom */
         grid-template-rows: auto;
         gap: 20px;
     }
@@ -530,7 +561,6 @@ footer {
         min-height: 250px;
     }
 
-    /* Footer Mobile */
     footer {
         flex-direction: column;
         text-align: center;
