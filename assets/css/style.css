@@ -1,12 +1,13 @@
 /* File: assets/css/style.css */
 
 :root {
-    --brand-red: #a50034;
-    --bg-color: #f8fafc;
+    --brand-red: #c51a72;
+    --bg-color: #f1f5f9;
     --card-bg: #ffffff;
     --card-border: #e2e8f0;
-    --text-main: #334155;
-    --text-muted: #64748b;
+    --text-main: #0f172a;
+    --text-muted: #334155;
+    --text-light: #64748b;
     /* --text-heading: var(--brand-red); */
     --text-heading: var(--text-main);
     --status-green: #10b981;
@@ -77,6 +78,17 @@ header.header-ui {
     color: var(--brand-red);
     white-space: nowrap;
     pointer-events: auto;
+    margin-bottom: 0;
+}
+
+.header-subtitle {
+    font-family: 'MyFontHeadline', sans-serif;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 5px;
 }
 
 .header-right {
@@ -98,20 +110,22 @@ header.header-ui {
 }
 
 .clock-time {
-    font-family: 'MyFontHeadline', sans-serif;
-    font-size: 1.4em;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--brand-red);
     line-height: 1;
-    color: var(--text-main);
-    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+    font-family: Consolas, 'Courier New', monospace;
 }
 
 .clock-date {
-    font-size: 0.8em;
+    font-size: 0.75em;
     color: var(--text-muted);
+    font-weight: 600;
     margin-top: 2px;
+    text-transform: uppercase;
 }
 
-/* Dropdown */
 .dropdown-container {
     position: relative;
     display: inline-block;
@@ -145,7 +159,6 @@ header.header-ui {
     font-size: 1.2em;
 }
 
-/* Dropdown Position Fix */
 .dropdown-menu {
     display: none;
     position: absolute;
@@ -163,6 +176,8 @@ header.header-ui {
 .dropdown-menu.show {
     display: block;
     animation: fadeIn 0.2s ease-out;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes fadeIn {
@@ -214,9 +229,10 @@ header.header-ui {
     justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease-in-out;
-    box-shadow: 0 2px 5px var(--shadow-color);
+    box-shadow: 0 4px 15px var(--shadow-color);
     border: 1px solid var(--card-border);
-    border-left-width: 6px;
+    border-left: 10px solid var(--text-muted);
+    /* border-left-width: 10px; */
     height: 100%;
     position: relative;
     box-sizing: border-box;
@@ -236,7 +252,7 @@ header.header-ui {
 .card.warning {
     border-left-color: #86efac;
     background: #f8fafc;
-    opacity: 0.8;
+    opacity: 1;
 }
 
 .card.disconnected {

@@ -1,8 +1,5 @@
 // File: grounding_monitor/assets/js/app.js
 
-/**
- * LOGIKA DROPDOWN MENU
- */
 function toggleDropdown() {
     const dropdown = document.getElementById("nav-dropdown");
     if (dropdown) {
@@ -22,9 +19,6 @@ window.onclick = function (event) {
     }
 }
 
-/**
- * LOGIKA WAKTU & TANGGAL
- */
 function updateDateTime() {
     const now = new Date();
     const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
@@ -33,7 +27,7 @@ function updateDateTime() {
     const timeElem = document.getElementById('time-display');
     const dateElem = document.getElementById('date-display');
 
-    if (timeElem) timeElem.textContent = now.toLocaleTimeString('id-ID', timeOptions).replace(/\./g, ':');
+    if (timeElem) timeElem.textContent = now.toLocaleTimeString('id-ID', timeOptions).replace(/\./g, '.');
     if (dateElem) dateElem.textContent = now.toLocaleDateString('id-ID', dateOptions);
 }
 
@@ -59,16 +53,16 @@ function formatWaktuRelatif(timestampString) {
     const selisihDetik = Math.round((now - then) / 1000);
     const selisihMenit = Math.round(selisihDetik / 60);
 
-    if (selisihDetik < 5) return "recently"; // Teks lebih padat
-    if (selisihDetik < 60) return `${selisihDetik}s ago`;
-    if (selisihMenit < 90) return `${selisihMenit}m ago`;
+    if (selisihDetik < 5) return "recently";
+    if (selisihDetik < 60) return `Pembaruan Terakhir: ${selisihDetik} seconds ago`;
+    if (selisihMenit < 90) return `Pembaruan Terakhir: ${selisihMenit} minutes ago`;
 
-    return `> 90m ago`;
+    return `more than 90 minutes ago`;
 }
 
 function loadStatus() {
     fetch('get_latest_status.php?nocache=' + new Date().getTime())
-        .then(res => res.ok ? res.json() : Promise.reject('Network error'))
+        .then(res => res.ok ? res.json() : Promise.reject('Network response was not ok.'))
         .then(data => {
             const grid = document.getElementById('monitor-grid');
             const alarm = document.getElementById("alarmSound");
@@ -102,17 +96,17 @@ function loadStatus() {
                     visualClass = 'disconnected blinking';
                     displayStatus = 'DISCONNECTED';
                     triggerAlarm = true;
-                } else if (rawStatus === 'DISCONNECTED') {
-                    visualClass = 'disconnected';
-                    displayStatus = 'FAULT';
-                    triggerAlarm = true;
-                } else if (diffSeconds >= TIME_CRITICAL) {
-                    visualClass = 'unknown blinking';
-                    displayStatus = 'ANOMALY';
-                    triggerAlarm = false;
-                } else if (diffSeconds >= TIME_WARNING) {
-                    visualClass = 'warning';
-                    displayStatus = 'CONNECTED';
+                    // } else if (rawStatus === 'DISCONNECTED') {
+                    //     visualClass = 'disconnected';
+                    //     displayStatus = 'FAULT';
+                    //     triggerAlarm = true;
+                    // } else if (diffSeconds >= TIME_CRITICAL) {
+                    //     visualClass = 'unknown blinking';
+                    //     displayStatus = 'ANOMALY';
+                    //     triggerAlarm = false;
+                    // } else if (diffSeconds >= TIME_WARNING) {
+                    //     visualClass = 'warning';
+                    //     displayStatus = 'CONNECTED';
                 } else {
                     visualClass = 'ok';
                     displayStatus = 'CONNECTED';
@@ -123,7 +117,6 @@ function loadStatus() {
                 const waktuTampil = formatWaktuRelatif(timestamp);
                 const description = locationDescriptions[loc] || '';
 
-                // Struktur Card yang lebih padat, Icon lebih besar
                 card.innerHTML = `
                   <div class="location">${loc}</div>
                   <div class="location-description">${description}</div>
@@ -171,7 +164,7 @@ function loadStatus() {
         .catch(error => {
             console.error(error);
             const grid = document.getElementById('monitor-grid');
-            if (grid) grid.innerHTML = `<div style="text-align:center; color:#ef4444; margin-top:50px;">Connection Lost...</div>`;
+            if (grid) grid.innerHTML = `<div style="text-align:center; color:#ef4444; margin-top:50px;">Gagal memuat data. Periksa koneksi atau file endpoint.</div>`;
         });
 }
 
@@ -179,5 +172,5 @@ document.addEventListener('DOMContentLoaded', () => {
     updateDateTime();
     setInterval(updateDateTime, 1000);
     loadStatus();
-    setInterval(loadStatus, 2000);
+    setInterval(loadStatus, 15000);
 });

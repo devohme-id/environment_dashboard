@@ -4,13 +4,14 @@
    Base Styles & Theming
    ========================================================================== */
 :root {
-    --brand-red: #a50034;
-    --bg-color: #f8fafc;
+    --brand-red: #c51a72;
+    --bg-color: #f1f5f9;
     --card-bg: #ffffff;
     --card-border: #e2e8f0;
-    --text-main: #334155;
-    --text-muted: #64748b;
-    --text-heading: var(--brand-red);
+    --text-main: #0f172a;
+    --text-muted: #334155;
+    --text-light: #64748b;
+    --text-heading: var(--text-main);
     --status-green: #10b981;
     --status-red: #f43f5e;
     --status-yellow: #f59e0b;
@@ -33,11 +34,9 @@
     font-style: normal;
 }
 
-html {
-    height: 100%;
-}
-
+html,
 body {
+    height: 100%;
     margin: 0;
     font-family: 'MyFontText', sans-serif;
     background: var(--bg-color);
@@ -53,20 +52,16 @@ header.header-ui {
     background: #ffffff;
     padding: 0 20px;
     height: 60px;
-    /* Tinggi default desktop */
     border-bottom: 3px solid var(--brand-red);
     display: flex;
     justify-content: flex-end;
-    /* Konten kanan di kanan */
     align-items: center;
     flex-shrink: 0;
     position: relative;
     box-shadow: 0 2px 4px -1px var(--shadow-color);
     z-index: 100;
-    /* Z-index tinggi agar dropdown di atas konten */
 }
 
-/* Judul Tengah (Desktop: Absolute) */
 .header-center {
     position: absolute;
     left: 50%;
@@ -75,9 +70,7 @@ header.header-ui {
     text-align: center;
     z-index: 0;
     width: 100%;
-    /* Agar text-align center bekerja baik */
     pointer-events: none;
-    /* Agar klik tembus jika overlapping */
 }
 
 .header-title {
@@ -88,7 +81,17 @@ header.header-ui {
     color: var(--brand-red);
     white-space: nowrap;
     pointer-events: auto;
-    /* Kembalikan pointer events ke teks */
+    margin-bottom: 0;
+}
+
+.header-subtitle {
+    font-family: 'MyFontHeadline', sans-serif;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 5px;
 }
 
 /* Area Kanan (Menu & Clock) */
@@ -111,20 +114,22 @@ header.header-ui {
 }
 
 .clock-time {
-    font-family: 'MyFontHeadline', sans-serif;
-    font-size: 1.4em;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--brand-red);
     line-height: 1;
-    color: var(--text-main);
-    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+    font-family: Consolas, 'Courier New', monospace;
 }
 
 .clock-date {
-    font-size: 0.8em;
-    color: var(--text-muted);
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 600;
     margin-top: 2px;
+    text-transform: uppercase;
 }
 
-/* Dropdown Container */
 .dropdown-container {
     position: relative;
     display: inline-block;
@@ -164,22 +169,21 @@ header.header-ui {
     display: none;
     position: absolute;
     top: 120%;
-    /* Sedikit di bawah tombol */
     right: 0;
-    /* Rata kanan dengan tombol */
     background-color: #ffffff;
     min-width: 220px;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--card-border);
     border-radius: 8px;
     z-index: 1000;
-    /* Sangat tinggi */
     overflow: hidden;
 }
 
 .dropdown-menu.show {
     display: block;
     animation: fadeIn 0.2s ease-out;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .dropdown-item {
@@ -240,9 +244,9 @@ main {
     padding: 10px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     border: 1px solid var(--card-border);
-    border-left: 4px solid var(--text-muted);
+    border-left: 10px solid var(--text-muted);
     transition: transform 0.2s;
     height: 100%;
     box-sizing: border-box;

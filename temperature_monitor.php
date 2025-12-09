@@ -16,22 +16,21 @@
 
     <header class="header-ui">
         <div class="header-center">
-            <div class="header-title" id="header-title-text">
+            <h1 class="header-title" id="header-title-text">
                 ENVIRONMENT MONITORING
-            </div>
+            </h1>
+            <p class="header-subtitle" id="header-subtitle-text"></p>
         </div>
         <div class="header-right">
             <div class="dropdown-container">
                 <button class="nav-btn" onclick="toggleDropdown()" title="Menu">
                     <i class="ti ti-menu-2" style="font-size: 1.2em;"></i>
                     <span>MENU</span>
-                    <i class="ti ti-chevron-down" style="font-size: 0.8em; margin-left: auto;"></i>
                 </button>
                 <div id="nav-dropdown" class="dropdown-menu">
                     <a href="#" class="dropdown-item" onclick="handleNavClick(1); return false;" id="link-page-1">SMT Lines</a>
                     <a href="#" class="dropdown-item" onclick="handleNavClick(2); return false;" id="link-page-2">Area & Storage</a>
                     <a href="#" class="dropdown-item" onclick="handleNavClick(3); return false;" id="link-page-3">Facility</a>
-                    <div style="border-top: 1px solid #e2e8f0; margin: 4px 0;"></div>
                     <a href="grounding_monitor.php" class="dropdown-item" target="_top">Grounding Monitor</a>
                 </div>
             </div>
@@ -81,11 +80,11 @@
                 <div class="legend-item"><span class="legend-box status-anomaly"></span><span>ANOMALY SENSOR</span></div>
             </div>
             <div class="info-ranges">
-                <span>Temp: 22~28°C</span> | <span>Hum: 30~60%</span> | <span>Press: 5.5~7.5 KGF/CM²</span>
+                <span>Temperature: 22 ~ 28°C</span> | <span>Humidity: 30 ~ 60%</span> | <span>Air Pressure: 5.5 ~ 7.5 KGF/CM²</span>
             </div>
         </div>
-        <div class="info-note" style="max-width: 500px;">
-            Status updated automatically. Alarm active during limit breach.
+        <div class="info-note" style="max-width: 800px;">
+            Status is updated automatically. Alarm and blinking animation are active only during a limit breach
         </div>
     </footer>
 

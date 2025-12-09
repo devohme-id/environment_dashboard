@@ -79,7 +79,7 @@ function updateDateTime() {
     const now = new Date();
     const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('time-display').textContent = now.toLocaleTimeString('id-ID', timeOptions).replace(/\./g, ':');
+    document.getElementById('time-display').textContent = now.toLocaleTimeString('id-ID', timeOptions).replace(/\./g, '.');
     document.getElementById('date-display').textContent = now.toLocaleDateString('id-ID', dateOptions);
 }
 
@@ -93,12 +93,12 @@ async function loadPage(pageNum = null) {
 
     // Update Judul Header
     const pageData = pageConfig[currentPage];
-    const headerTitleEl = document.getElementById('header-title-text');
-    if (pageData && headerTitleEl) {
-        headerTitleEl.style.opacity = 0;
+    const headerSubTitleEl = document.getElementById('header-subtitle-text');
+    if (pageData && headerSubTitleEl) {
+        headerSubTitleEl.style.opacity = 0;
         setTimeout(() => {
-            headerTitleEl.textContent = pageData.title;
-            headerTitleEl.style.opacity = 1;
+            headerSubTitleEl.textContent = pageData.title;
+            headerSubTitleEl.style.opacity = 1;
         }, 200);
     }
 

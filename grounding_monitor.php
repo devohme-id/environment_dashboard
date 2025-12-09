@@ -12,24 +12,27 @@
 <body>
     <header class="header-ui">
         <div class="header-center">
-            <div class="header-title">
+            <h1 class="header-title">
                 GROUNDING CHECKER MONITORING
-            </div>
+            </h1>
+            <p class="header-subtitle" id="header-subtitle-text">
+                &nbsp;
+            </p>
         </div>
         <div class="header-right">
             <div class="dropdown-container">
                 <button class="nav-btn" onclick="toggleDropdown()" id="menuButton" title="Menu">
                     <i class="ti ti-menu-2" style="font-size: 1.2em;"></i>
                     <span>MENU</span>
-                    <i class="ti ti-chevron-down" style="font-size: 0.8em; margin-left: auto;"></i>
+                    <!-- <i class="ti ti-chevron-down" style="font-size: 0.8em; margin-left: auto;"></i> -->
                 </button>
                 <div id="nav-dropdown" class="dropdown-menu">
                     <a href="index.php" class="dropdown-item" target="_top">
                         <!-- <i class="ti ti-dashboard" style="margin-right:5px"></i> Dashboard Utama -->
-                        Dashboard Utama
+                        Environment Monitoring
                     </a>
-                    <div style="border-top: 1px solid #f1f5f9; margin: 5px 0;"></div>
-                    <span style="display:block; padding: 5px 16px; font-size: 0.8em; color:#64748b;">System Active</span>
+                    <!-- <div style="border-top: 1px solid #f1f5f9; margin: 5px 0;"></div>
+                    <span style="display:block; padding: 5px 16px; font-size: 0.8em; color:#64748b;">System Active</span> -->
                 </div>
             </div>
 
@@ -51,19 +54,19 @@
             <div class="legend" style="flex-direction: row; align-items: center; gap: 20px;">
                 <div class="legend-item">
                     <span class="legend-box ok"></span>
-                    <span style="font-weight: 600; font-size: 0.95em;">Ground path is <strong>normal</strong>.</span>
+                    <span style="font-weight: 600; font-size: 1.1em;">Ground path is <strong>normal</strong>.</span>
                 </div>
                 <div class="legend-item">
                     <span class="legend-box disconnected"></span>
-                    <span style="font-weight: 600; font-size: 0.95em;">Ground path has a fault.</span>
+                    <span style="font-weight: 600; font-size: 1.1em;">Ground path has a <strong>fault.</strong></span>
                 </div>
                 <div class="legend-item">
                     <span class="legend-box unknown"></span>
-                    <span style="font-weight: 600; font-size: 0.95em;">Anomaly Sensor.</span>
+                    <span style="font-weight: 600; font-size: 1.1em;">Anomaly Sensor.</span>
                 </div>
             </div>
         </div>
-        <div class="info-note" style="max-width: 500px;">
+        <div class="info-note" style="max-width: 800px;">
             Status updates automatically every 2 seconds. Alarm and blinking animation are active only during a fault.
         </div>
     </footer>
