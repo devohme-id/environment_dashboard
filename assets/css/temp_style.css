@@ -242,127 +242,126 @@ main {
 
 .chart-card {
     background: var(--card-bg);
-    border-radius: 8px;
-    padding: 10px;
+    border-radius: 16px;
+    padding: 10px 12px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     border: 1px solid var(--card-border);
     border-left: 10px solid var(--text-muted);
-    transition: transform 0.2s;
+    transition: transform 0.3s;
     height: 100%;
     box-sizing: border-box;
 }
 
 /* --- Status Colors & Animations --- */
 
-/* Safe (No Animation) */
 .chart-card.status-safe {
-    border-left-color: var(--status-green);
+    border-left-color: #4ade80;
 }
 
-/* Warning (Yellow) */
 .chart-card.status-warning {
-    border-left-color: var(--status-yellow);
-    background-color: #fffbeb;
-    /* Amber-50 */
+    border-left-color: #facc15;
+    background-color: #422006;
+}
+
+.chart-card.status-danger {
+    border-left-color: #ef4444;
+    background-color: #450a0a;
+}
+
+.chart-card.status-anomaly {
+    border-left-color: #a78bfa;
+    background-color: #2e1065;
+}
+
+.chart-card.status-partial_anomaly {
+    border-left-color: #f59e0b;
+    background-color: #4a2c0d;
 }
 
 .chart-card.status-warning.blinking {
     animation: blink-warning 1s infinite;
 }
 
-@keyframes blink-warning {
-
-    0%,
-    100% {
-        background-color: #fffbeb;
-    }
-
-    /* Base */
-    50% {
-        background-color: #fef3c7;
-    }
-
-    /* Amber-100 (Darker) */
-}
-
-/* Danger (Red) */
-.chart-card.status-danger {
-    border-left-color: var(--status-red);
-    background-color: #fef2f2;
-    /* Red-50 */
-}
-
 .chart-card.status-danger.blinking {
     animation: blink-danger 1s infinite;
-}
-
-@keyframes blink-danger {
-
-    0%,
-    100% {
-        background-color: #fef2f2;
-    }
-
-    /* Base */
-    50% {
-        background-color: #fee2e2;
-    }
-
-    /* Red-100 (Darker) */
-}
-
-/* Anomaly (Purple) */
-.chart-card.status-anomaly {
-    border-left-color: var(--status-purple);
-    background-color: #faf5ff;
-    /* Violet-50 */
 }
 
 .chart-card.status-anomaly.blinking {
     animation: blink-anomaly 1s infinite;
 }
 
-@keyframes blink-anomaly {
-
-    0%,
-    100% {
-        background-color: #faf5ff;
-    }
-
-    /* Base */
-    50% {
-        background-color: #f3e8ff;
-    }
-
-    /* Violet-100 (Darker) */
-}
-
-/* Partial Anomaly (Orange) */
-.chart-card.status-partial_anomaly {
-    border-left-color: #f97316;
-    background-color: #fff7ed;
-    /* Orange-50 */
-}
-
 .chart-card.status-partial_anomaly.blinking {
     animation: blink-partial-anomaly 1s infinite;
 }
 
+/* Merah Muda Cerah (Danger) */
+@keyframes blink-danger {
+
+    0%,
+    100% {
+        background-color: #fee2e2;
+        /* Red 100 */
+        color: #991b1b;
+        /* Text color suggestion: Dark Red */
+    }
+
+    50% {
+        background-color: #fca5a5;
+        /* Red 300 */
+    }
+}
+
+/* Kuning/Amber Cerah (Warning) */
+@keyframes blink-warning {
+
+    0%,
+    100% {
+        background-color: #fef3c7;
+        /* Amber 100 */
+        color: #92400e;
+        /* Text color suggestion: Dark Amber */
+    }
+
+    50% {
+        background-color: #fcd34d;
+        /* Amber 300 */
+    }
+}
+
+/* Ungu Muda (Anomaly) */
+@keyframes blink-anomaly {
+
+    0%,
+    100% {
+        background-color: #f3e8ff;
+        /* Purple 100 */
+        color: #6b21a8;
+        /* Text color suggestion: Dark Purple */
+    }
+
+    50% {
+        background-color: #d8b4fe;
+        /* Purple 300 */
+    }
+}
+
+/* Oranye Cerah (Partial Anomaly) */
 @keyframes blink-partial-anomaly {
 
     0%,
     100% {
-        background-color: #fff7ed;
-    }
-
-    /* Base */
-    50% {
         background-color: #ffedd5;
+        /* Orange 100 */
+        color: #9a3412;
+        /* Text color suggestion: Dark Orange */
     }
 
-    /* Orange-100 (Darker) */
+    50% {
+        background-color: #fdba74;
+        /* Orange 300 */
+    }
 }
 
 /* Unknown (Gray) */
@@ -373,9 +372,8 @@ main {
 .chart-card h2 {
     margin: 0 0 5px 0;
     font-family: 'MyFontHeadline', sans-serif;
-    font-size: 1em;
+    font-size: 1.4em;
     text-align: center;
-    /* color: var(--brand-red); */
     color: #000000;
 }
 
@@ -385,7 +383,7 @@ main {
     font-style: italic;
     text-align: center;
     margin-bottom: 5px;
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 
 .chart-container {
