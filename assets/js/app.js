@@ -1,7 +1,7 @@
 // File: grounding_monitor/assets/js/app.js
 
-/** * LOGIKA DROPDOWN MENU
- * Fungsi ini dipanggil saat tombol MENU diklik
+/**
+ * LOGIKA DROPDOWN MENU
  */
 function toggleDropdown() {
     const dropdown = document.getElementById("nav-dropdown");
@@ -10,7 +10,6 @@ function toggleDropdown() {
     }
 }
 
-// Event Listener Global untuk menutup dropdown saat klik di luar area menu
 window.onclick = function (event) {
     if (!event.target.closest('.dropdown-container')) {
         const dropdowns = document.getElementsByClassName("dropdown-menu");
@@ -60,8 +59,8 @@ function formatWaktuRelatif(timestampString) {
     const selisihDetik = Math.round((now - then) / 1000);
     const selisihMenit = Math.round(selisihDetik / 60);
 
-    if (selisihDetik < 5) return "recently";
-    if (selisihDetik < 60) return `${selisihDetik}s ago`; // Disingkat agar muat di card compact
+    if (selisihDetik < 5) return "Live"; // Teks lebih padat
+    if (selisihDetik < 60) return `${selisihDetik}s ago`;
     if (selisihMenit < 90) return `${selisihMenit}m ago`;
 
     return `> 90m ago`;
@@ -75,7 +74,6 @@ function loadStatus() {
             const alarm = document.getElementById("alarmSound");
             if (!grid) return;
 
-            // Jangan clear innerHTML total agar tidak flicker parah, tapi untuk simplicity kita reset
             grid.innerHTML = '';
 
             const dataMap = new Map(data.map(item => [item.line_id, item]));
@@ -110,7 +108,7 @@ function loadStatus() {
                     triggerAlarm = true;
                 } else if (diffSeconds >= TIME_CRITICAL) {
                     visualClass = 'unknown blinking';
-                    displayStatus = 'ANOMALY'; // Teks dipendekkan
+                    displayStatus = 'ANOMALY';
                     triggerAlarm = false;
                 } else if (diffSeconds >= TIME_WARNING) {
                     visualClass = 'warning';
@@ -125,7 +123,7 @@ function loadStatus() {
                 const waktuTampil = formatWaktuRelatif(timestamp);
                 const description = locationDescriptions[loc] || '';
 
-                // HTML Card yang sudah disesuaikan agar lebih compact
+                // Struktur Card yang lebih padat, Icon lebih besar
                 card.innerHTML = `
                   <div class="location">${loc}</div>
                   <div class="location-description">${description}</div>
@@ -133,20 +131,25 @@ function loadStatus() {
                     <div class="status-animation">
                         <i class="ti ti-building-estate machine-icon"></i>
 
-                        <!-- Kabel Putus -->
-                        <svg class="cable-svg cable-error" width="60" height="30" viewBox="0 0 80 30" style="display: ${visualClass.includes('disconnected') || visualClass.includes('unknown') ? 'block' : 'none'}">
-                            <path class="cable-path" d="M 5,15 C 25,0 35,15 38,15"/>
-                            <path class="cable-path" d="M 42,15 C 45,15 55,30 75,15"/>
+                        <!-- Kabel Putus (ViewBox disesuaikan agar kabel terlihat tebal & panjang) -->
+                        <svg class="cable-svg cable-error" viewBox="0 0 100 40" style="display: ${visualClass.includes('disconnected') || visualClass.includes('unknown') ? 'block' : 'none'}">
+                             <!-- Kabel Kiri -->
+                             <path class="cable-path" d="M 5,20 C 30,5 40,20 45,20"/>
+                             <!-- Silang Error (X) di tengah -->
+                             <path class="cable-path" d="M 40,10 L 60,30" stroke-width="4" stroke="currentColor" />
+                             <path class="cable-path" d="M 60,10 L 40,30" stroke-width="4" stroke="currentColor" />
+                             <!-- Kabel Kanan -->
+                             <path class="cable-path" d="M 55,20 C 60,20 70,35 95,20"/>
                         </svg>
 
                         <!-- Kabel Nyambung -->
-                        <svg class="cable-svg cable-ok" width="60" height="30" viewBox="0 0 80 30" style="display: ${visualClass === 'ok' ? 'block' : 'none'}">
-                            <path class="cable-path" d="M 5,15 C 25,0 55,30 75,15"/>
+                        <svg class="cable-svg cable-ok" viewBox="0 0 100 40" style="display: ${visualClass === 'ok' ? 'block' : 'none'}">
+                            <path class="cable-path" d="M 5,20 C 30,5 70,35 95,20"/>
                         </svg>
 
                         <!-- Kabel Warning -->
-                        <svg class="cable-svg cable-warning" width="60" height="30" viewBox="0 0 80 30" style="display: ${visualClass === 'warning' ? 'block' : 'none'}">
-                             <path class="cable-path" stroke-dasharray="5,5" d="M 5,15 C 25,0 55,30 75,15"/>
+                        <svg class="cable-svg cable-warning" viewBox="0 0 100 40" style="display: ${visualClass === 'warning' ? 'block' : 'none'}">
+                             <path class="cable-path" stroke-dasharray="10,10" d="M 5,20 C 30,5 70,35 95,20"/>
                         </svg>
 
                         <i class="ti ti-outlet device-icon"></i>

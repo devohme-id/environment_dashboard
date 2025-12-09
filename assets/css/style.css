@@ -1,32 +1,19 @@
 /* File: assets/css/style.css */
 
-/* ==========================================================================
-   Base Styles & Theming
-   ========================================================================== */
 :root {
-    --ohm-50: #fdf2f8;
-    --ohm-100: #fce7f3;
-    --ohm-200: #fbcfe8;
-    --ohm-300: #f9a8d4;
-    --ohm-400: #f472b6;
-    --ohm-500: #ec4899;
-    --ohm-600: #db2777;
-    --ohm-700: #be185d;
-    --ohm-800: #9d174d;
-    --ohm-900: #831843;
-
-    --bg-color: var(--ohm-50);
+    --brand-red: #a50034;
+    --bg-color: #f8fafc;
     --card-bg: #ffffff;
-    --card-border: var(--ohm-200);
-
+    --card-border: #e2e8f0;
     --text-main: #334155;
     --text-muted: #64748b;
-    --text-heading: var(--ohm-900);
-
-    --status-green: #328E6E;
+    --text-heading: var(--brand-red);
+    --status-green: #10b981;
     --status-red: #f43f5e;
-    --status-green-warning: #67AE6E;
-    --shadow-color: rgba(131, 24, 67, 0.05);
+    --status-yellow: #f59e0b;
+    --status-purple: #a78bfa;
+    /* ANOMALY COLOR */
+    --shadow-color: rgba(0, 0, 0, 0.05);
 }
 
 @font-face {
@@ -43,29 +30,31 @@
     font-style: normal;
 }
 
+html,
 body {
+    height: 100%;
     margin: 0;
+    padding: 0;
     font-family: 'MyFontText', sans-serif;
     background: var(--bg-color);
     color: var(--text-main);
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    overflow: hidden;
 }
 
-/* --- HEADER (Ohm Theme) --- */
+/* --- HEADER --- */
 header.header-ui {
     background: #ffffff;
-    height: 70px;
-    padding: 0 30px;
-    border-bottom: 1px solid var(--ohm-200);
+    height: 60px;
+    padding: 0 20px;
+    border-bottom: 3px solid var(--brand-red);
     display: flex;
     justify-content: flex-end;
-    /* Push right content */
     align-items: center;
     flex-shrink: 0;
     position: relative;
-    box-shadow: 0 4px 6px -1px var(--shadow-color);
+    box-shadow: 0 2px 4px -1px var(--shadow-color);
     z-index: 50;
     box-sizing: border-box;
 }
@@ -81,10 +70,10 @@ header.header-ui {
 
 .header-title {
     font-family: 'MyFontHeadline', sans-serif;
-    font-size: 1.6em;
+    font-size: 1.5em;
     font-weight: bold;
-    letter-spacing: 1.5px;
-    color: var(--text-heading);
+    letter-spacing: 1.2px;
+    color: var(--brand-red);
     white-space: nowrap;
 }
 
@@ -102,20 +91,20 @@ header.header-ui {
     flex-direction: column;
     justify-content: center;
     padding-left: 15px;
-    border-left: 1px solid var(--ohm-200);
-    min-width: 120px;
+    border-left: 1px solid var(--card-border);
+    min-width: 110px;
 }
 
 .clock-time {
     font-family: 'MyFontHeadline', sans-serif;
-    font-size: 1.6em;
+    font-size: 1.4em;
     line-height: 1;
     color: var(--text-main);
     font-weight: bold;
 }
 
 .clock-date {
-    font-size: 0.85em;
+    font-size: 0.8em;
     color: var(--text-muted);
     margin-top: 2px;
 }
@@ -128,35 +117,41 @@ header.header-ui {
 
 .nav-btn {
     font-family: 'MyFontHeadline', sans-serif;
-    background-color: transparent;
+    background-color: #ffffff;
     color: var(--text-muted);
-    border: 1px solid var(--ohm-200);
-    padding: 8px 16px;
+    border: 1px solid var(--card-border);
     border-radius: 6px;
     cursor: pointer;
-    font-size: 0.95em;
+    width: auto;
+    height: 38px;
+    padding: 0 16px;
     display: flex;
     align-items: center;
     gap: 8px;
-    height: 36px;
     transition: all 0.2s;
+    font-size: 0.95em;
+    font-weight: bold;
 }
 
 .nav-btn:hover {
-    background-color: var(--ohm-50);
-    color: var(--ohm-700);
-    border-color: var(--ohm-300);
+    background-color: #fff1f2;
+    color: var(--brand-red);
+    border-color: var(--brand-red);
+}
+
+.nav-btn i {
+    font-size: 1.2em;
 }
 
 .dropdown-menu {
     display: none;
     position: absolute;
     right: 0;
-    top: 120%;
+    top: 115%;
     background-color: #ffffff;
     min-width: 200px;
     box-shadow: 0 4px 6px -1px var(--shadow-color);
-    border: 1px solid var(--ohm-200);
+    border: 1px solid var(--card-border);
     border-radius: 8px;
     z-index: 100;
 }
@@ -184,64 +179,71 @@ header.header-ui {
     text-decoration: none;
     display: block;
     font-size: 0.9em;
-    border-bottom: 1px solid var(--ohm-50);
+    border-bottom: 1px solid #f1f5f9;
 }
 
 .dropdown-item:hover {
-    background-color: var(--ohm-50);
-    color: var(--ohm-700);
+    background-color: #f8fafc;
+    color: var(--brand-red);
 }
 
-/* --- GRID & CARDS (Compact) --- */
+/* --- GRID & CARDS --- */
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 20px;
-    padding: 20px 30px;
+    gap: 15px;
+    padding: 20px;
     box-sizing: border-box;
     flex-grow: 1;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .card {
     background: var(--card-bg);
     border-left: 6px solid var(--text-muted);
     border-radius: 12px;
-    padding: 20px;
+    padding: 25px 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease-in-out;
-    box-shadow: 0 2px 4px var(--shadow-color);
+    box-shadow: 0 2px 5px var(--shadow-color);
     border: 1px solid var(--card-border);
     border-left-width: 6px;
-    min-height: 180px;
+    height: 100%;
+    position: relative;
+    box-sizing: border-box;
 }
 
 .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
 }
 
-/* Colors */
+/* Status Styles */
 .card.ok {
     border-left-color: var(--status-green);
+    background: linear-gradient(to bottom right, #ffffff, #f0fdf4);
 }
 
 .card.warning {
-    border-left-color: var(--status-green-warning);
-    background-color: #fffbeb;
+    border-left-color: #86efac;
+    background: #f8fafc;
+    opacity: 0.9;
 }
 
 .card.disconnected {
     border-left-color: var(--status-red);
-    background-color: #fef2f2;
+    background: linear-gradient(to bottom right, #fef2f2, #fff1f2);
 }
 
+/* ANOMALY / UNKNOWN (PURPLE) */
 .card.unknown {
-    border-left-color: var(--text-muted);
-    background-color: #f8fafc;
+    border-left-color: var(--status-purple);
+    background: linear-gradient(to bottom right, #faf5ff, #f3e8ff);
 }
 
 .blinking {
@@ -252,73 +254,82 @@ header.header-ui {
 
     0%,
     100% {
-        background-color: #fef2f2;
+        opacity: 1;
     }
 
     50% {
+        opacity: 0.8;
         background-color: #ffe4e6;
     }
 }
 
+/* Typography */
 .location {
-    font-size: 1.8em;
-    margin-bottom: 0px;
+    font-size: 2.2em;
+    line-height: 1;
+    margin-bottom: 8px;
     color: var(--text-heading);
-    font-weight: bold;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
 .location-description {
-    font-size: 1em;
+    font-size: 1.1em;
     color: var(--text-muted);
-    margin-top: 2px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-weight: 500;
 }
 
-/* Animation & Icons */
+/* Animation Area */
 .status-animation {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 5px 0;
-    height: 40px;
+    margin: 15px 0;
+    height: 80px;
+    width: 100%;
 }
 
 .device-icon,
 .machine-icon {
-    font-size: 50px;
+    font-size: 64px;
 }
 
 .cable-svg {
-    margin: 0 8px;
+    margin: 0 5px;
     overflow: visible;
+    width: 100px;
+    height: 40px;
 }
 
 .cable-path {
-    stroke-width: 4px;
+    stroke-width: 6px;
     stroke-linecap: round;
     fill: none;
 }
 
+/* Icon Colors */
 .card.ok .device-icon,
 .card.ok .machine-icon {
     color: var(--status-green);
+    filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.2));
 }
 
 .card.ok .cable-ok .cable-path {
     stroke: var(--status-green);
-    stroke-dasharray: 8 8;
-    animation: flow 1s linear infinite;
-}
-
-.card.warning .cable-warning .cable-path {
-    stroke: var(--status-green-warning);
-    stroke-dasharray: 6 6;
-    animation: flow 1s linear infinite;
+    stroke-dasharray: 10 10;
+    animation: flow 0.8s linear infinite;
 }
 
 .card.warning .device-icon,
 .card.warning .machine-icon {
-    color: var(--status-green-warning);
+    color: #86efac;
+}
+
+.card.warning .cable-warning .cable-path {
+    stroke: #86efac;
+    stroke-dasharray: 6 6;
+    animation: flow 0.8s linear infinite;
 }
 
 .card.disconnected .device-icon,
@@ -331,16 +342,18 @@ header.header-ui {
 }
 
 .card.disconnected .cable-error {
-    animation: pulse-error 1.5s ease-in-out infinite;
+    animation: pulse-error 1s ease-in-out infinite;
 }
 
+/* ANOMALY ICONS (PURPLE) */
 .card.unknown .device-icon,
 .card.unknown .machine-icon {
-    color: var(--text-muted);
+    color: var(--status-purple);
+    opacity: 1;
 }
 
 .card.unknown .cable-error .cable-path {
-    stroke: var(--text-muted);
+    stroke: var(--status-purple);
 }
 
 @keyframes flow {
@@ -349,28 +362,32 @@ header.header-ui {
     }
 
     to {
-        stroke-dashoffset: -16;
+        stroke-dashoffset: -20;
     }
 }
 
 @keyframes pulse-error {
     0% {
         opacity: 1;
+        stroke-width: 6px;
     }
 
     50% {
-        opacity: 0.3;
+        opacity: 0.4;
+        stroke-width: 8px;
     }
 
     100% {
         opacity: 1;
+        stroke-width: 6px;
     }
 }
 
+/* Status Text */
 .status-text {
-    font-size: 0.95em;
-    font-weight: bold;
-    margin-top: 8px;
+    font-size: 1.4em;
+    font-weight: 900;
+    margin-top: 10px;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -379,58 +396,69 @@ header.header-ui {
     color: var(--status-green);
 }
 
+.card.warning .status-text {
+    color: #86efac;
+}
+
 .card.disconnected .status-text {
     color: var(--status-red);
 }
 
 .card.unknown .status-text {
-    color: var(--text-muted);
-}
-
-.card.warning .status-text {
-    color: var(--status-green-warning);
+    color: var(--status-purple);
 }
 
 .timestamp {
-    font-size: 1.1em;
+    font-size: 1em;
     color: var(--text-muted);
     margin-top: 10px;
     font-style: italic;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 4px 10px;
+    border-radius: 4px;
 }
 
 /* Footer */
 footer {
     background: #ffffff;
-    color: var(--text-muted);
-    padding: 10px 30px;
-    border-top: 1px solid var(--ohm-200);
+    color: var(--text-main);
+    padding: 12px 20px;
+    border-top: 2px solid #e2e8f0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
     gap: 15px;
     flex-shrink: 0;
+    font-size: 0.95em;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.02);
+    z-index: 60;
+}
+
+.footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .legend {
     display: flex;
     gap: 20px;
     align-items: center;
+    margin-bottom: 4px;
 }
 
 .legend-item {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.9em;
-    color: var(--text-main);
+    font-weight: 500;
 }
 
 .legend-box {
     width: 14px;
     height: 14px;
     border-radius: 3px;
-    border: 1px solid var(--ohm-300);
+    border: 1px solid #cbd5e1;
 }
 
 .legend-box.ok {
@@ -442,17 +470,19 @@ footer {
 }
 
 .legend-box.unknown {
-    background-color: var(--text-muted);
+    background-color: var(--status-purple);
+    /* PURPLE LEGEND */
 }
 
 .legend-box.warning {
-    background-color: var(--status-green-warning);
+    background-color: var(--status-yellow);
 }
 
-.note {
-    font-size: 0.85em;
+.info-note {
     font-style: italic;
-    color: var(--ohm-600);
+    text-align: right;
+    color: var(--text-muted);
+    max-width: 400px;
 }
 
 @media (max-width: 1200px) {
@@ -467,16 +497,21 @@ footer {
     .header-center {
         position: static;
         transform: none;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
+    }
+
+    footer {
+        flex-direction: column;
+        text-align: center;
     }
 }
 
 @media (max-width: 768px) {
     header.header-ui {
         height: auto;
-        padding: 15px;
+        padding: 10px;
         flex-direction: column;
-        gap: 10px;
+        gap: 5px;
     }
 
     .header-right {
@@ -491,12 +526,7 @@ footer {
 
     .grid {
         grid-template-columns: 1fr;
-        padding: 15px;
-        gap: 15px;
-    }
-
-    footer {
-        flex-direction: column;
-        text-align: center;
+        padding: 10px;
+        gap: 20px;
     }
 }

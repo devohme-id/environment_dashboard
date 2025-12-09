@@ -4,37 +4,26 @@
    Base Styles & Theming
    ========================================================================== */
 :root {
-    /* --- Ohm Color Palette --- */
-    --ohm-50: #fdf2f8;
-    --ohm-100: #fce7f3;
-    --ohm-200: #fbcfe8;
-    --ohm-300: #f9a8d4;
-    --ohm-400: #f472b6;
-    --ohm-500: #ec4899;
-    --ohm-600: #db2777;
-    --ohm-700: #be185d;
-    --ohm-800: #9d174d;
-    --ohm-900: #831843;
+    --brand-red: #a50034;
+    /* Brand Red */
 
-    /* --- Functional Mapping --- */
-    --bg-color: var(--ohm-50);
-    /* Background halaman agak pinkish */
+    --bg-color: #f8fafc;
+    /* Slate 50 */
     --card-bg: #ffffff;
-    --card-border: var(--ohm-200);
+    --card-border: #e2e8f0;
 
     --text-main: #334155;
     --text-muted: #64748b;
-    --text-heading: var(--ohm-900);
-    /* Judul menggunakan warna tema */
+    --text-heading: var(--brand-red);
 
     --status-green: #10b981;
     --status-red: #f43f5e;
-    --status-green-warning: #67AE6E;
+    --status-yellow: #f59e0b;
+    --status-purple: #a78bfa;
+    /* ANOMALY COLOR */
     --status-blue: #3b82f6;
 
-    --accent-primary: var(--ohm-500);
-    --shadow-color: rgba(131, 24, 67, 0.05);
-    /* Shadow pinkish */
+    --shadow-color: rgba(0, 0, 0, 0.05);
 }
 
 @font-face {
@@ -66,25 +55,21 @@ body {
     overflow: hidden;
 }
 
-/* --- HEADER (Ohm Theme Layout) --- */
+/* --- HEADER --- */
 header.header-ui {
     background: #ffffff;
-    padding: 0 30px;
-    height: 70px;
-    border-bottom: 1px solid var(--ohm-200);
-    /* Border Pink Tipis */
+    padding: 0 20px;
+    height: 60px;
+    border-bottom: 3px solid var(--brand-red);
     display: flex;
     justify-content: flex-end;
-    /* Konten kanan didorong ke kanan */
     align-items: center;
     flex-shrink: 0;
     position: relative;
-    /* Penting untuk absolute centering */
-    box-shadow: 0 4px 6px -1px var(--shadow-color);
+    box-shadow: 0 2px 4px -1px var(--shadow-color);
     z-index: 50;
 }
 
-/* Judul Tengah (Absolute Center) */
 .header-center {
     position: absolute;
     left: 50%;
@@ -92,21 +77,18 @@ header.header-ui {
     transform: translate(-50%, -50%);
     text-align: center;
     z-index: 0;
-    /* Agar tidak menutupi dropdown jika layar sempit */
 }
 
 .header-title {
     font-family: 'MyFontHeadline', sans-serif;
-    font-size: 1.6em;
+    font-size: 1.5em;
     font-weight: bold;
-    letter-spacing: 1.5px;
-    color: var(--text-heading);
-    /* Merah Tua / Magenta */
+    letter-spacing: 1.2px;
+    color: var(--brand-red);
     white-space: nowrap;
     transition: opacity 0.3s ease;
 }
 
-/* Area Kanan (Menu & Clock) */
 .header-right {
     display: flex;
     align-items: center;
@@ -120,27 +102,26 @@ header.header-ui {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-width: 120px;
+    min-width: 110px;
     padding-left: 15px;
-    border-left: 1px solid var(--ohm-200);
-    /* Separator pink */
+    border-left: 1px solid var(--card-border);
 }
 
 .clock-time {
     font-family: 'MyFontHeadline', sans-serif;
-    font-size: 1.6em;
+    font-size: 1.4em;
     line-height: 1;
     color: var(--text-main);
     font-weight: bold;
 }
 
 .clock-date {
-    font-size: 0.85em;
+    font-size: 0.8em;
     color: var(--text-muted);
     margin-top: 2px;
 }
 
-/* Dropdown */
+/* Dropdown & Nav Button */
 .dropdown-container {
     position: relative;
     display: inline-block;
@@ -150,33 +131,40 @@ header.header-ui {
     font-family: 'MyFontHeadline', sans-serif;
     background-color: #ffffff;
     color: var(--text-muted);
-    border: 1px solid var(--ohm-200);
-    padding: 8px 16px;
+    border: 1px solid var(--card-border);
     border-radius: 6px;
     cursor: pointer;
-    font-size: 0.95em;
-    height: 36px;
+    width: auto;
+    height: 38px;
+    padding: 0 16px;
     display: flex;
     align-items: center;
     gap: 8px;
     transition: all 0.2s;
+    font-size: 0.95em;
+    font-weight: bold;
 }
 
 .nav-btn:hover {
-    background-color: var(--ohm-50);
-    color: var(--ohm-700);
-    border-color: var(--ohm-400);
+    background-color: #fff1f2;
+    color: var(--brand-red);
+    border-color: var(--brand-red);
+}
+
+.nav-btn svg {
+    width: 18px;
+    height: 18px;
 }
 
 .dropdown-menu {
     display: none;
     position: absolute;
     right: 0;
-    top: 120%;
+    top: 115%;
     background-color: #ffffff;
     min-width: 200px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px var(--shadow-color);
-    border: 1px solid var(--ohm-200);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--card-border);
     border-radius: 8px;
     z-index: 100;
 }
@@ -192,19 +180,19 @@ header.header-ui {
     text-decoration: none;
     display: block;
     font-size: 0.9em;
-    border-bottom: 1px solid var(--ohm-50);
+    border-bottom: 1px solid #f1f5f9;
 }
 
 .dropdown-item:hover {
-    background-color: var(--ohm-50);
-    color: var(--ohm-700);
+    background-color: #f8fafc;
+    color: var(--brand-red);
 }
 
 .dropdown-item.active-page {
-    background-color: var(--ohm-50);
-    color: var(--ohm-700);
+    background-color: #fef2f2;
+    color: var(--brand-red);
     font-weight: bold;
-    border-left: 3px solid var(--ohm-500);
+    border-left: 3px solid var(--brand-red);
 }
 
 @keyframes fadeIn {
@@ -219,10 +207,10 @@ header.header-ui {
     }
 }
 
-/* --- GRID & CARDS (Compact & Themed) --- */
+/* --- GRID & CARDS --- */
 main {
     flex-grow: 1;
-    padding: 20px 30px;
+    padding: 15px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -231,32 +219,33 @@ main {
 
 .chart-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 20px;
+    gap: 15px;
     flex-grow: 1;
+    min-height: 0;
 }
 
 .chart-card {
     background: var(--card-bg);
-    border-radius: 12px;
-    padding: 15px 20px;
+    border-radius: 8px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 2px 4px var(--shadow-color);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     border: 1px solid var(--card-border);
-    border-left: 6px solid var(--text-muted);
-    /* Default border */
-    transition: transform 0.3s;
+    border-left: 4px solid var(--text-muted);
+    transition: transform 0.2s;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-/* Status Colors mapped to Ohm Theme variables where applicable */
 .chart-card.status-safe {
     border-left-color: var(--status-green);
 }
 
 .chart-card.status-warning {
-    border-left-color: var(--status-green-warning);
+    border-left-color: var(--status-yellow);
     background-color: #fffbeb;
 }
 
@@ -269,9 +258,10 @@ main {
     border-left-color: var(--text-muted);
 }
 
+/* ANOMALY CARD STYLE (PURPLE) */
 .chart-card.status-anomaly {
-    border-left-color: var(--ohm-400);
-    background-color: var(--ohm-50);
+    border-left-color: var(--status-purple);
+    background-color: #faf5ff;
 }
 
 .chart-card.status-partial_anomaly {
@@ -279,7 +269,6 @@ main {
     background-color: #fff7ed;
 }
 
-/* Blinking */
 .chart-card.blinking {
     animation: blink-bg 1s infinite;
 }
@@ -292,16 +281,16 @@ main {
     }
 
     50% {
-        background-color: #ffe4e6;
+        background-color: #fee2e2;
     }
 }
 
 .chart-card h2 {
-    margin: 0 0 10px 0;
+    margin: 0 0 5px 0;
     font-family: 'MyFontHeadline', sans-serif;
-    font-size: 1.2em;
+    font-size: 1em;
     text-align: center;
-    color: var(--text-heading);
+    color: var(--brand-red);
 }
 
 .anomaly-message {
@@ -309,59 +298,62 @@ main {
     font-weight: bold;
     font-style: italic;
     text-align: center;
-    margin-bottom: 10px;
-    font-size: 0.85em;
+    margin-bottom: 5px;
+    font-size: 0.8em;
 }
 
 .chart-container {
     position: relative;
     flex-grow: 1;
-    min-height: 200px;
+    width: 100%;
 }
 
 .error-message {
     color: var(--status-red);
-    padding: 20px;
+    padding: 15px;
     text-align: center;
 }
 
 /* Footer */
 footer {
     background: #ffffff;
-    color: var(--text-muted);
-    padding: 10px 30px;
-    border-top: 1px solid var(--ohm-200);
+    color: var(--text-main);
+    padding: 12px 20px;
+    border-top: 2px solid #e2e8f0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
     flex-shrink: 0;
+    font-size: 0.95em;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .footer-left {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
 }
 
 .legend {
     display: flex;
     gap: 15px;
     align-items: center;
+    margin-bottom: 4px;
 }
 
 .legend-item {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.9em;
+    font-weight: 500;
 }
 
 .legend-box {
     width: 14px;
     height: 14px;
     border-radius: 3px;
-    border: 1px solid var(--ohm-300);
+    border: 1px solid #cbd5e1;
 }
 
 .legend-box.status-safe {
@@ -369,7 +361,7 @@ footer {
 }
 
 .legend-box.status-warning {
-    background-color: var(--status-green-warning);
+    background-color: var(--status-yellow);
 }
 
 .legend-box.status-danger {
@@ -377,34 +369,37 @@ footer {
 }
 
 .legend-box.status-anomaly {
-    background-color: var(--ohm-400);
+    background-color: var(--status-purple);
+    /* PURPLE LEGEND */
 }
 
 .info-ranges {
-    font-size: 0.9em;
-    color: var(--text-muted);
+    color: var(--text-main);
+    font-weight: bold;
+    font-size: 1.1em;
+    letter-spacing: 0.5px;
 }
 
 .info-note {
-    font-size: 0.85em;
     font-style: italic;
     text-align: right;
-    color: var(--ohm-600);
+    color: var(--text-muted);
+    max-width: 400px;
 }
 
 @media (max-width: 1200px) {
     header.header-ui {
         height: auto;
-        padding: 15px;
+        padding: 10px;
         flex-direction: column;
-        gap: 10px;
+        gap: 5px;
         justify-content: center;
     }
 
     .header-center {
         position: static;
         transform: none;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
     }
 
     .header-right {
@@ -415,15 +410,36 @@ footer {
     footer {
         flex-direction: column;
         text-align: center;
+        gap: 10px;
+    }
+
+    .info-note {
+        text-align: center;
+    }
+
+    .chart-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
     }
 }
 
 @media (max-width: 768px) {
-    main {
-        padding: 15px;
-    }
-
     .chart-grid {
         grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 20px;
+    }
+
+    .chart-card {
+        min-height: 250px;
+    }
+
+    .legend {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .footer-left {
+        align-items: center;
     }
 }

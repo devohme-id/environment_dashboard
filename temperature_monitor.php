@@ -24,20 +24,20 @@
         <!-- Bagian Kanan: Menu & Jam -->
         <div class="header-right">
 
-            <!-- Dropdown Menu -->
+            <!-- Dropdown Menu (Text + Icon) -->
             <div class="dropdown-container">
-                <button class="nav-btn" onclick="toggleDropdown()">
-                    <span>MENU</span>
-                    <!-- Icon Panah Bawah -->
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M6 9l6 6 6-6" />
+                <button class="nav-btn" onclick="toggleDropdown()" title="Menu">
+                    <!-- Icon SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
                     </svg>
+                    MENU
                 </button>
                 <div id="nav-dropdown" class="dropdown-menu">
                     <a href="#" class="dropdown-item" onclick="handleNavClick(1); return false;" id="link-page-1">SMT Lines</a>
                     <a href="#" class="dropdown-item" onclick="handleNavClick(2); return false;" id="link-page-2">Area & Storage</a>
                     <a href="#" class="dropdown-item" onclick="handleNavClick(3); return false;" id="link-page-3">Facility</a>
-                    <div style="border-top: 1px solid #fce7f3; margin: 4px 0;"></div>
+                    <div style="border-top: 1px solid #e2e8f0; margin: 4px 0;"></div>
                     <a href="grounding_monitor.php" class="dropdown-item" target="_top">Grounding Monitor</a>
                 </div>
             </div>
