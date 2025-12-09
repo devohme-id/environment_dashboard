@@ -5,32 +5,27 @@
     <meta charset="UTF-8">
     <title>Temperature & Humidity Monitoring</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/tabler-icons.min.css">
     <link rel="stylesheet" href="assets/css/temp_style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0/dist/chartjs-plugin-annotation.min.js"></script>
+    <script src="assets/js/chart.js"></script>
+    <script src="assets/js/chartjs-adapter-date-fns.js"></script>
+    <script src="assets/js/chartjs-plugin-annotation.min.js"></script>
 </head>
 
 <body>
 
     <header class="header-ui">
-        <!-- Bagian Tengah: Judul (Absolute Center di Desktop, Flow di Mobile) -->
         <div class="header-center">
             <div class="header-title" id="header-title-text">
                 ENVIRONMENT MONITORING
             </div>
         </div>
-
-        <!-- Bagian Kanan: Menu & Jam -->
         <div class="header-right">
-
-            <!-- Dropdown Menu -->
             <div class="dropdown-container">
                 <button class="nav-btn" onclick="toggleDropdown()" title="Menu">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
-                    </svg>
-                    MENU
+                    <i class="ti ti-menu-2" style="font-size: 1.2em;"></i>
+                    <span>MENU</span>
+                    <i class="ti ti-chevron-down" style="font-size: 0.8em; margin-left: auto;"></i>
                 </button>
                 <div id="nav-dropdown" class="dropdown-menu">
                     <a href="#" class="dropdown-item" onclick="handleNavClick(1); return false;" id="link-page-1">SMT Lines</a>
@@ -83,13 +78,13 @@
                 <div class="legend-item"><span class="legend-box status-safe"></span><span>SAFE</span></div>
                 <div class="legend-item"><span class="legend-box status-warning"></span><span>WARNING</span></div>
                 <div class="legend-item"><span class="legend-box status-danger"></span><span>DANGER</span></div>
-                <div class="legend-item"><span class="legend-box status-anomaly"></span><span>ANOMALY</span></div>
+                <div class="legend-item"><span class="legend-box status-anomaly"></span><span>ANOMALY SENSOR</span></div>
             </div>
             <div class="info-ranges">
                 <span>Temp: 22~28°C</span> | <span>Hum: 30~60%</span> | <span>Press: 5.5~7.5 KGF/CM²</span>
             </div>
         </div>
-        <div class="info-note">
+        <div class="info-note" style="max-width: 500px;">
             Status updated automatically. Alarm active during limit breach.
         </div>
     </footer>

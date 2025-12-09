@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <title>Grounding Monitoring System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="assets/css/tabler-icons.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -17,7 +16,6 @@
                 GROUNDING CHECKER MONITORING
             </div>
         </div>
-
         <div class="header-right">
             <div class="dropdown-container">
                 <button class="nav-btn" onclick="toggleDropdown()" id="menuButton" title="Menu">
@@ -27,7 +25,8 @@
                 </button>
                 <div id="nav-dropdown" class="dropdown-menu">
                     <a href="index.php" class="dropdown-item" target="_top">
-                        <i class="ti ti-dashboard" style="margin-right:5px"></i> Dashboard Utama
+                        <!-- <i class="ti ti-dashboard" style="margin-right:5px"></i> Dashboard Utama -->
+                        Dashboard Utama
                     </a>
                     <div style="border-top: 1px solid #f1f5f9; margin: 5px 0;"></div>
                     <span style="display:block; padding: 5px 16px; font-size: 0.8em; color:#64748b;">System Active</span>
@@ -69,6 +68,7 @@
         </div>
     </footer>
 
+    <audio id="alarmSound" src="assets/alarm.wav" preload="auto"></audio>
     <script src="assets/js/app.js"></script>
 
 </body>

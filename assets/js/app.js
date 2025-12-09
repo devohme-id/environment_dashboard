@@ -59,7 +59,7 @@ function formatWaktuRelatif(timestampString) {
     const selisihDetik = Math.round((now - then) / 1000);
     const selisihMenit = Math.round(selisihDetik / 60);
 
-    if (selisihDetik < 5) return "Live"; // Teks lebih padat
+    if (selisihDetik < 5) return "recently"; // Teks lebih padat
     if (selisihDetik < 60) return `${selisihDetik}s ago`;
     if (selisihMenit < 90) return `${selisihMenit}m ago`;
 

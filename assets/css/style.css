@@ -7,7 +7,8 @@
     --card-border: #e2e8f0;
     --text-main: #334155;
     --text-muted: #64748b;
-    --text-heading: var(--brand-red);
+    /* --text-heading: var(--brand-red); */
+    --text-heading: var(--text-main);
     --status-green: #10b981;
     --status-red: #f43f5e;
     --status-yellow: #f59e0b;
