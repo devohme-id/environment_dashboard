@@ -49,7 +49,6 @@
 
     <footer>
         <div class="footer-left">
-            <!-- Legend Horizontal -->
             <div class="legend" style="flex-direction: row; align-items: center; gap: 20px;">
                 <div class="legend-item">
                     <span class="legend-box ok"></span>

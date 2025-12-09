@@ -5,24 +5,17 @@
    ========================================================================== */
 :root {
     --brand-red: #a50034;
-    /* Brand Red */
-
     --bg-color: #f8fafc;
-    /* Slate 50 */
     --card-bg: #ffffff;
     --card-border: #e2e8f0;
-
     --text-main: #334155;
     --text-muted: #64748b;
     --text-heading: var(--brand-red);
-
     --status-green: #10b981;
     --status-red: #f43f5e;
     --status-yellow: #f59e0b;
     --status-purple: #a78bfa;
-    /* ANOMALY COLOR */
     --status-blue: #3b82f6;
-
     --shadow-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -55,21 +48,25 @@ body {
     overflow: hidden;
 }
 
-/* --- HEADER --- */
+/* --- HEADER UI (REVISI RESPONSIVE) --- */
 header.header-ui {
     background: #ffffff;
     padding: 0 20px;
     height: 60px;
+    /* Tinggi default desktop */
     border-bottom: 3px solid var(--brand-red);
     display: flex;
     justify-content: flex-end;
+    /* Konten kanan di kanan */
     align-items: center;
     flex-shrink: 0;
     position: relative;
     box-shadow: 0 2px 4px -1px var(--shadow-color);
-    z-index: 50;
+    z-index: 100;
+    /* Z-index tinggi agar dropdown di atas konten */
 }
 
+/* Judul Tengah (Desktop: Absolute) */
 .header-center {
     position: absolute;
     left: 50%;
@@ -77,6 +74,10 @@ header.header-ui {
     transform: translate(-50%, -50%);
     text-align: center;
     z-index: 0;
+    width: 100%;
+    /* Agar text-align center bekerja baik */
+    pointer-events: none;
+    /* Agar klik tembus jika overlapping */
 }
 
 .header-title {
@@ -86,9 +87,11 @@ header.header-ui {
     letter-spacing: 1.2px;
     color: var(--brand-red);
     white-space: nowrap;
-    transition: opacity 0.3s ease;
+    pointer-events: auto;
+    /* Kembalikan pointer events ke teks */
 }
 
+/* Area Kanan (Menu & Clock) */
 .header-right {
     display: flex;
     align-items: center;
@@ -121,7 +124,7 @@ header.header-ui {
     margin-top: 2px;
 }
 
-/* Dropdown & Nav Button */
+/* Dropdown Container */
 .dropdown-container {
     position: relative;
     display: inline-block;
@@ -156,17 +159,22 @@ header.header-ui {
     height: 18px;
 }
 
+/* Dropdown Menu (Posisi diperbaiki) */
 .dropdown-menu {
     display: none;
     position: absolute;
+    top: 120%;
+    /* Sedikit di bawah tombol */
     right: 0;
-    top: 115%;
+    /* Rata kanan dengan tombol */
     background-color: #ffffff;
-    min-width: 200px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    min-width: 220px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--card-border);
     border-radius: 8px;
-    z-index: 100;
+    z-index: 1000;
+    /* Sangat tinggi */
+    overflow: hidden;
 }
 
 .dropdown-menu.show {
@@ -176,10 +184,10 @@ header.header-ui {
 
 .dropdown-item {
     color: var(--text-main);
-    padding: 10px 16px;
+    padding: 12px 16px;
     text-decoration: none;
     display: block;
-    font-size: 0.9em;
+    font-size: 0.95em;
     border-bottom: 1px solid #f1f5f9;
 }
 
@@ -198,7 +206,7 @@ header.header-ui {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(-5px);
+        transform: translateY(-8px);
     }
 
     to {
@@ -258,7 +266,6 @@ main {
     border-left-color: var(--text-muted);
 }
 
-/* ANOMALY CARD STYLE (PURPLE) */
 .chart-card.status-anomaly {
     border-left-color: var(--status-purple);
     background-color: #faf5ff;
@@ -370,7 +377,6 @@ footer {
 
 .legend-box.status-anomaly {
     background-color: var(--status-purple);
-    /* PURPLE LEGEND */
 }
 
 .info-ranges {
@@ -387,45 +393,63 @@ footer {
     max-width: 400px;
 }
 
-@media (max-width: 1200px) {
+/* --- RESPONSIVE / MOBILE MEDIA QUERY --- */
+@media (max-width: 900px) {
+
+    /* Header berubah menjadi Stack (Atas-Bawah) */
     header.header-ui {
         height: auto;
-        padding: 10px;
+        padding: 15px 20px;
         flex-direction: column;
-        gap: 5px;
         justify-content: center;
+        gap: 12px;
     }
 
+    /* Judul Kembali ke Flow Normal (Tidak Absolute) */
     .header-center {
         position: static;
         transform: none;
+        width: auto;
         margin-bottom: 5px;
     }
 
+    .header-title {
+        font-size: 1.3em;
+        /* Font lebih kecil di mobile */
+        white-space: normal;
+        /* Allow wrap if needed */
+    }
+
+    /* Kanan (Menu & Jam) di bawah judul, centered */
     .header-right {
         width: 100%;
         justify-content: space-between;
+        /* Jam kiri, Menu kanan atau sebaliknya */
     }
 
-    footer {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
+    .header-clock {
+        text-align: left;
+        /* Jam di kiri */
+        padding-left: 0;
+        border-left: none;
+        align-items: flex-start;
     }
 
-    .info-note {
-        text-align: center;
+    /* Dropdown alignment */
+    .dropdown-container {
+        /* Menu di kanan */
     }
 
-    .chart-grid {
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: auto;
+    .dropdown-menu {
+        /* Pastikan menu tidak keluar layar */
+        right: 0;
+        min-width: 200px;
     }
-}
 
-@media (max-width: 768px) {
+    /* Grid Panel Mobile */
     .chart-grid {
         grid-template-columns: 1fr;
+        /* 1 Kolom */
         grid-template-rows: auto;
         gap: 20px;
     }
@@ -434,12 +458,20 @@ footer {
         min-height: 250px;
     }
 
-    .legend {
-        flex-wrap: wrap;
-        justify-content: center;
+    /* Footer Mobile */
+    footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
     }
 
-    .footer-left {
-        align-items: center;
+    .info-note {
+        text-align: center;
+        max-width: 100%;
+    }
+
+    .legend {
+        justify-content: center;
+        flex-wrap: wrap;
     }
 }
