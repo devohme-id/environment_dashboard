@@ -54,8 +54,8 @@ function formatWaktuRelatif(timestampString) {
     const selisihMenit = Math.round(selisihDetik / 60);
 
     if (selisihDetik < 5) return "recently";
-    if (selisihDetik < 60) return `Pembaruan Terakhir: ${selisihDetik} seconds ago`;
-    if (selisihMenit < 90) return `Pembaruan Terakhir: ${selisihMenit} minutes ago`;
+    if (selisihDetik < 60) return `${selisihDetik} seconds ago`;
+    if (selisihMenit < 90) return `${selisihMenit} minutes ago`;
 
     return `more than 90 minutes ago`;
 }
