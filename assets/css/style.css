@@ -34,15 +34,23 @@
     padding: 0;
 }
 
-html,
 body {
-    height: 100%;
+    height: 100vh;
     font-family: 'MyFontText', sans-serif;
     background: var(--bg-color);
     color: var(--text-main);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+}
+
+main {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
 }
 
 .header-ui {
@@ -549,7 +557,6 @@ footer {
     flex-shrink: 0;
     font-size: 0.95em;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.02);
-    z-index: 60;
 }
 
 .footer-left {
@@ -604,68 +611,68 @@ footer {
 }
 
 @media (max-width: 900px) {
+
     header.header-ui {
         height: auto;
-        padding: 15px 20px;
+        min-height: 70px;
+        padding: 15px;
         flex-direction: column;
-        gap: 12px;
         justify-content: center;
+        gap: 15px;
     }
 
-    .header-center {
+    .header-left {
         position: static;
         transform: none;
-        width: auto;
-        margin-bottom: 5px;
-        pointer-events: auto;
+        width: 100%;
+        text-align: center;
+        margin: 0;
+        order: 1;
     }
 
     .header-title {
-        font-size: 1.3em;
+        font-size: 1.4em;
         white-space: normal;
-        line-height: 1.3;
+        line-height: 1.2;
+    }
+
+    .header-subtitle {
+        display: block;
+        margin-top: 4px;
     }
 
     .header-right {
         width: 100%;
-        justify-content: space-between;
+        margin-left: 0;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        order: 2;
     }
 
     .header-clock {
-        text-align: left;
+        text-align: center;
         padding-left: 0;
         border-left: none;
-        align-items: flex-start;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .clock-time {
+        font-size: 1.3rem;
     }
 
     .dropdown-menu {
-        right: 0;
+        right: 50%;
+        transform: translateX(50%);
         min-width: 200px;
+        top: 110%;
     }
 
-    .grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-        gap: 20px;
-    }
-
-    .card {
-        min-height: 250px;
-    }
-
-    footer {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-    }
-
-    .legend {
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .info-note {
-        text-align: center;
-        max-width: 100%;
+    .dropdown-menu::before {
+        left: 0;
+        width: 100%;
     }
 }
