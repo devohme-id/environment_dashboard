@@ -11,6 +11,7 @@
     --status-red: #dc2626;
     --status-yellow: #d97706;
     --status-purple: #a78bfa;
+    --status-gray: #868383;
     --shadow-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -340,7 +341,7 @@ main {
 }
 
 .card.unknown {
-    border-left-color: var(--status-purple);
+    border-left-color: var(--status-gray);
     background: linear-gradient(to bottom right, #faf5ff, #f3e8ff);
 }
 
@@ -475,12 +476,12 @@ main {
 
 .card.unknown .device-icon,
 .card.unknown .machine-icon {
-    color: var(--status-purple);
+    color: var(--status-gray);
     opacity: 1;
 }
 
 .card.unknown .cable-error .cable-path {
-    stroke: var(--status-purple);
+    stroke: var(--status-gray);
 }
 
 @keyframes flow {
@@ -532,6 +533,10 @@ main {
 }
 
 .card.unknown .status-text {
+    color: var(--status-gray);
+}
+
+.card.anomaly .status-text {
     color: var(--status-purple);
 }
 
@@ -595,6 +600,10 @@ footer {
 }
 
 .legend-box.unknown {
+    background-color: var(--status-gray);
+}
+
+.legend-box.anomaly {
     background-color: var(--status-purple);
 }
 

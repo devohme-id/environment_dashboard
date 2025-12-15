@@ -66,7 +66,7 @@
                     <span style="font-weight: 600; font-size: 1.1em;">Ground path has a <strong>fault.</strong></span>
                 </div>
                 <div class="legend-item">
-                    <span class="legend-box unknown"></span>
+                    <span class="legend-box anomaly"></span>
                     <span style="font-weight: 600; font-size: 1.1em;">Anomaly Sensor.</span>
                 </div>
             </div>

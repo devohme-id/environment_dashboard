@@ -90,26 +90,30 @@ function loadStatus() {
                 let visualClass = '';
                 let displayStatus = '';
                 const TIME_WARNING = 30;
-                const TIME_CRITICAL = 900;
+                const TIME_CRITICAL = 960;
 
                 if (!item) {
                     visualClass = 'disconnected blinking';
+                    displayStatus = 'OFFLINE'; `1`
+                    triggerAlarm = true;
+                }
+                else if (rawStatus === 'DISCONNECTED') {
+                    visualClass = 'disconnected';
                     displayStatus = 'DISCONNECTED';
                     triggerAlarm = true;
-                    // } else if (rawStatus === 'DISCONNECTED') {
-                    //     visualClass = 'disconnected';
-                    //     displayStatus = 'FAULT';
-                    //     triggerAlarm = true;
-                    // } else if (diffSeconds >= TIME_CRITICAL) {
-                    //     visualClass = 'unknown blinking';
-                    //     displayStatus = 'ANOMALY';
-                    //     triggerAlarm = false;
-                    // } else if (diffSeconds >= TIME_WARNING) {
-                    //     visualClass = 'warning';
-                    //     displayStatus = 'CONNECTED';
-                } else {
+                }
+                else if (rawStatus === 'OK') {
                     visualClass = 'ok';
                     displayStatus = 'CONNECTED';
+                } else {
+                    if (diffSeconds >= TIME_CRITICAL) {
+                        visualClass = 'unknown blinking';
+                        displayStatus = 'UNKNOWN';
+                        triggerAlarm = false;
+                    } else {
+                        visualClass = 'unknown blinking';
+                        displayStatus = 'UNKNOWN';
+                    }
                 }
 
                 const card = document.createElement('div');
