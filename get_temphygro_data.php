@@ -2,18 +2,7 @@
 header('Content-Type: application/json');
 
 // --- Konfigurasi Database ---
-$servername = "10.217.4.115";
-$username = "oei_user";
-$password = "oei_user";
-$dbname = "ohm_temphygro_db"; // Pastikan nama database sudah sesuai
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    http_response_code(500);
-    echo json_encode(["error" => "Koneksi ke database gagal: " . $conn->connect_error]);
-    exit();
-}
+require_once 'db.php';
 
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $data = [];

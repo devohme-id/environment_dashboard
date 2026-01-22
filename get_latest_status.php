@@ -3,20 +3,7 @@
 header('Content-Type: application/json');
 
 // --- Konfigurasi Database ---
-$servername = "10.217.4.115";
-$username = "oei_user";
-$password = "oei_user";
-$dbname = "ohm_temphygro_db"; // Pastikan nama database sudah sesuai
-
-// Membuat koneksi
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Memeriksa koneksi
-if ($conn->connect_error) {
-    // Jika koneksi gagal, kirim response error yang jelas
-    echo json_encode(["error" => "Koneksi ke database gagal: " . $conn->connect_error]);
-    exit();
-}
+require_once 'db.php';
 
 // --- Query SQL Disesuaikan untuk Tabel 'grounding_logs' ---
 // Subquery ini berfungsi untuk mendapatkan entri log terbaru untuk setiap line_id
@@ -26,7 +13,6 @@ $sql = "SELECT
             grounding_logs t1
             INNER JOIN (SELECT line_id, MAX(TIMESTAMP) AS max_timestamp FROM grounding_logs GROUP BY line_id) t2 ON t1.line_id = t2.line_id
             AND t1.TIMESTAMP = t2.max_timestamp
-            WHERE t1.ground_status = 'OK'
             GROUP BY t2.line_id ORDER BY t2.line_id";
 
 $result = $conn->query($sql);
