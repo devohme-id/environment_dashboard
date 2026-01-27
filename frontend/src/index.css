@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@theme {
+  --color-slate-50: #f8fafc;
+  --color-slate-900: #0f172a;
+}
+
+@layer base {
+  @font-face {
+    font-family: 'LGEI Headline';
+    src: url('./assets/fonts/LGEIHeadlineTTF-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'LGEI Text';
+    src: url('./assets/fonts/LGEITextTTF-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  body {
+    background-color: var(--color-slate-50);
+    color: var(--color-slate-900);
+    font-family: 'LGEI Text', sans-serif;
+  }
+}
