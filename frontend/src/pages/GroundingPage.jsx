@@ -53,7 +53,7 @@ export default function GroundingPage() {
             onTogglePause={togglePause}
             isPaused={isPaused}
         >
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 h-full pb-10 content-start">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 h-full">
                 {fixedLocations.map(loc => {
                     const item = dataMap.get(loc);
                     return (
