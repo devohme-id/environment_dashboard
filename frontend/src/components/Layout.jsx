@@ -36,81 +36,88 @@ export default function Layout({ title, subtitle, onTogglePause, isPaused, child
     return (
         <div className="flex flex-col h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 overflow-hidden font-sans">
             {/* Header */}
-            <header className="flex-none h-20 bg-white dark:bg-slate-800 shadow-sm border-b-4 border-primary relative z-20">
-                {/* Top Right Controls (Absolute) */}
-                <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-4">
-                    {/* Navigation */}
-                    <div className="relative">
+            {/* Header */}
+            <header className="flex-none min-h-[80px] bg-white dark:bg-slate-800 shadow-sm border-b-4 border-primary z-20 relative transition-all duration-300">
+                <div className="w-full flex flex-col md:grid md:grid-cols-[1fr_auto_1fr] items-center p-2 md:px-6 gap-2 md:gap-0">
+
+                    {/* Left Spacer (Desktop) / Hidden (Mobile) */}
+                    <div className="hidden md:block"></div>
+
+                    {/* Center Title */}
+                    <div className="flex flex-col items-center justify-center text-center w-full order-1 md:order-none">
+                        <h1 className="text-xl md:text-3xl font-bold tracking-tight text-primary uppercase">
+                            ENVIRONMENT MONITORING
+                        </h1>
+                        {title && (
+                            <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">
+                                {title}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Right Controls */}
+                    <div className="flex items-center justify-center md:justify-end gap-2 md:gap-4 w-full md:w-auto order-2 md:order-none">
+                        {/* Navigation */}
+                        <div className="relative">
+                            <button
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded border border-primary text-primary hover:bg-pink-50 transition-colors font-bold uppercase text-xs md:text-sm tracking-wider"
+                            >
+                                <IconMenu2 size={18} />
+                                <span>MENU</span>
+                            </button>
+
+                            {isMenuOpen && (
+                                <>
+                                    <div className="fixed inset-0 z-10" onClick={() => setIsMenuOpen(false)} />
+                                    <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 py-2 z-20 flex flex-col overflow-hidden animate-scale-in origin-top-right">
+                                        {navItems.map((item) => (
+                                            <Link
+                                                key={item.path}
+                                                to={item.path}
+                                                onClick={() => setIsMenuOpen(false)}
+                                                className={cn(
+                                                    "px-4 py-3 text-sm font-medium hover:bg-pink-50 dark:hover:bg-pink-900/20 hover:text-pink-600 dark:hover:text-pink-400 transition-colors flex items-center gap-2",
+                                                    location.pathname + location.search === item.path || location.pathname === item.path ? "bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 border-l-4 border-pink-600" : "text-slate-600 dark:text-slate-300 border-l-4 border-transparent"
+                                                )}
+                                            >
+                                                {item.label}
+                                            </Link>
+                                        ))}
+                                        <div className="h-px bg-slate-100 dark:bg-slate-700 my-1" />
+                                        <button
+                                            onClick={() => { onTogglePause && onTogglePause(); setIsMenuOpen(false); }}
+                                            className="px-4 py-3 text-sm font-medium w-full text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500 flex items-center gap-2"
+                                        >
+                                            {isPaused ? <><IconPlayerPlay size={16} /> Resume Auto-Cycle</> : <><IconPlayerPause size={16} /> Pause Auto-Cycle</>}
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+
+                        {/* Sound Toggle */}
                         <button
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="flex items-center gap-2 px-4 py-2 rounded border border-primary text-primary hover:bg-pink-50 transition-colors font-bold uppercase text-sm tracking-wider"
+                            onClick={toggleMute}
+                            className={cn(
+                                "p-1.5 md:p-2 rounded border transition-all shadow-sm",
+                                isMuted ? "bg-slate-200 text-slate-500 border-slate-300" : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50"
+                            )}
+                            title={isMuted ? "Unmute Alarm" : "Mute Alarm"}
                         >
-                            <IconMenu2 size={18} />
-                            <span>MENU</span>
+                            {isMuted ? <IconVolumeOff size={20} /> : <IconVolume size={20} />}
                         </button>
 
-                        {isMenuOpen && (
-                            <>
-                                <div className="fixed inset-0 z-10" onClick={() => setIsMenuOpen(false)} />
-                                <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 py-2 z-20 flex flex-col overflow-hidden animate-scale-in origin-top-right">
-                                    {navItems.map((item) => (
-                                        <Link
-                                            key={item.path}
-                                            to={item.path}
-                                            onClick={() => setIsMenuOpen(false)}
-                                            className={cn(
-                                                "px-4 py-3 text-sm font-medium hover:bg-pink-50 dark:hover:bg-pink-900/20 hover:text-pink-600 dark:hover:text-pink-400 transition-colors flex items-center gap-2",
-                                                location.pathname + location.search === item.path || location.pathname === item.path ? "bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 border-l-4 border-pink-600" : "text-slate-600 dark:text-slate-300 border-l-4 border-transparent"
-                                            )}
-                                        >
-                                            {item.label}
-                                        </Link>
-                                    ))}
-                                    <div className="h-px bg-slate-100 dark:bg-slate-700 my-1" />
-                                    <button
-                                        onClick={() => { onTogglePause && onTogglePause(); setIsMenuOpen(false); }}
-                                        className="px-4 py-3 text-sm font-medium w-full text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500 flex items-center gap-2"
-                                    >
-                                        {isPaused ? <><IconPlayerPlay size={16} /> Resume Auto-Cycle</> : <><IconPlayerPause size={16} /> Pause Auto-Cycle</>}
-                                    </button>
-                                </div>
-                            </>
-                        )}
-                    </div>
-
-                    {/* Sound Toggle */}
-                    <button
-                        onClick={toggleMute}
-                        className={cn(
-                            "p-2 rounded border transition-all shadow-sm",
-                            isMuted ? "bg-slate-200 text-slate-500 border-slate-300" : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50"
-                        )}
-                        title={isMuted ? "Unmute Alarm" : "Mute Alarm"}
-                    >
-                        {isMuted ? <IconVolumeOff size={20} /> : <IconVolume size={20} />}
-                    </button>
-
-                    {/* Clock */}
-                    <div className="flex flex-col items-end leading-tight min-w-[140px]">
-                        <div className="text-2xl font-bold font-mono text-slate-700 dark:text-slate-200 tabular-nums tracking-wide">
-                            {formattedTime}
-                        </div>
-                        <div className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                            {formattedDate}
+                        {/* Clock */}
+                        <div className="flex flex-col items-end leading-tight min-w-[100px] md:min-w-[140px]">
+                            <div className="text-xl md:text-2xl font-bold font-mono text-slate-700 dark:text-slate-200 tabular-nums tracking-wide">
+                                {formattedTime}
+                            </div>
+                            <div className="text-[9px] md:text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest hidden md:block">
+                                {formattedDate}
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                {/* Centered Title */}
-                <div className="flex flex-col justify-center items-center h-full w-full pointer-events-none">
-                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-primary">
-                        ENVIRONMENT MONITORING
-                    </h1>
-                    {title && (
-                        <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">
-                            {title}
-                        </p>
-                    )}
                 </div>
             </header>
 
@@ -137,26 +144,57 @@ export default function Layout({ title, subtitle, onTogglePause, isPaused, child
             </main>
 
             {/* Footer */}
-            <footer className="flex-none h-10 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between px-6 text-xs text-slate-600 font-medium">
+            <footer className="flex-none bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex flex-col justify-center px-4 md:px-6 py-2 text-xs text-slate-600 font-medium gap-1 z-10 relative shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                {/* Row 1: Legends */}
                 <div className="flex items-center gap-6">
-                    <span className="flex items-center gap-2">
-                        <span className="w-4 h-4 bg-status-safe rounded-sm"></span> <span className="font-bold">SAFE</span>
-                    </span>
-                    <span className="flex items-center gap-2">
-                        <span className="w-4 h-4 bg-status-warning rounded-sm"></span> <span className="font-bold">WARNING</span>
-                    </span>
-                    <span className="flex items-center gap-2">
-                        <span className="w-4 h-4 bg-status-danger rounded-sm"></span> <span className="font-bold">DANGER</span>
-                    </span>
-                    <span className="flex items-center gap-2">
-                        <span className="w-4 h-4 bg-status-anomaly rounded-sm"></span> <span className="font-bold">ANOMALY SENSOR</span>
-                    </span>
+                    {location.pathname === '/monitor-grounding' ? (
+                        <>
+                            <span className="flex items-center gap-2">
+                                <span className="w-3 h-3 bg-status-safe rounded-sm"></span> <span className="font-bold uppercase">Ground path is normal</span>
+                            </span>
+                            <span className="flex items-center gap-2">
+                                <span className="w-3 h-3 bg-status-danger rounded-sm"></span> <span className="font-bold uppercase">Ground path has a fault</span>
+                            </span>
+                            <span className="flex items-center gap-2">
+                                <span className="w-3 h-3 bg-status-anomaly rounded-sm"></span> <span className="font-bold uppercase">Anomaly Sensor</span>
+                            </span>
+                        </>
+                    ) : (
+                        <>
+                            <span className="flex items-center gap-2">
+                                <span className="w-3 h-3 bg-status-safe rounded-sm"></span> <span className="font-bold">SAFE</span>
+                            </span>
+                            <span className="flex items-center gap-2">
+                                <span className="w-3 h-3 bg-status-warning rounded-sm"></span> <span className="font-bold">WARNING</span>
+                            </span>
+                            <span className="flex items-center gap-2">
+                                <span className="w-3 h-3 bg-status-danger rounded-sm"></span> <span className="font-bold">DANGER</span>
+                            </span>
+                            <span className="flex items-center gap-2">
+                                <span className="w-3 h-3 bg-status-anomaly rounded-sm"></span> <span className="font-bold">ANOMALY SENSOR</span>
+                            </span>
+                        </>
+                    )}
                 </div>
-                <div className="flex gap-4">
-                    <span>Temperature: 22 ~ 28°C</span> | <span>Humidity: 30 ~ 60%</span> | <span>Air Pressure: 5.5 ~ 7.5 KGF/CM²</span>
-                </div>
-                <div className="italic text-slate-400">
-                    Status is updated automatically. Alarm and blinking animation are active only during a limit breach
+
+                {/* Row 2: Info & Disclaimer */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 border-t border-slate-100 dark:border-slate-700 pt-1 mt-1">
+                    <div className="flex flex-wrap gap-1 md:gap-4 text-[11px] md:text-xs text-slate-500">
+                        {location.pathname === '/monitor-grounding' ? (
+                            <span>Grounding Resistance Monitoring System with Real-Time Alert</span>
+                        ) : (
+                            <>
+                                <span>Temperature: 22 ~ 28°C</span>
+                                <span className="hidden md:inline text-slate-300">|</span>
+                                <span>Humidity: 30 ~ 60%</span>
+                                <span className="hidden md:inline text-slate-300">|</span>
+                                <span>Air Pressure: 5.5 ~ 7.5 KGF/CM²</span>
+                            </>
+                        )}
+                    </div>
+                    <div className="italic text-slate-400 text-[10px] md:text-xs md:text-right">
+                        Status is updated automatically. Alarm and blinking animation are active only during a limit breach
+                    </div>
                 </div>
             </footer>
 
