@@ -5,12 +5,23 @@ import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { useAutoCycle } from '../hooks/useAutoCycle';
 import { useAlarmContext } from '../context/AlarmContext';
 
-export default function Layout({ title, subtitle, onTogglePause, isPaused, children }) {
+const TITLE_MAP = {
+    '/monitor-smt': 'SMT LINES MONITORING',
+    '/monitor-area': 'AREA & STORAGE MONITORING',
+    '/monitor-facility': 'FACILITY MONITORING',
+    '/monitor-grounding': 'GROUNDING CHECKER MONITORING'
+};
+
+export default function Layout({ children }) {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { isMuted, toggleMute } = useAlarmContext();
+
+    // Auto Cycle Logic (Lifted from pages)
+    const { isPaused, togglePause } = useAutoCycle(['/monitor-smt', '/monitor-area', '/monitor-facility', '/monitor-grounding']);
 
     // Dark Mode Logic
     const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -35,6 +46,7 @@ export default function Layout({ title, subtitle, onTogglePause, isPaused, child
     const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
     const location = useLocation();
+    const currentTitle = TITLE_MAP[location.pathname] || "ENVIRONMENT MONITORING";
 
     // Clock effect
     useEffect(() => {
@@ -70,11 +82,9 @@ export default function Layout({ title, subtitle, onTogglePause, isPaused, child
                         <h1 className="text-lg md:text-3xl font-bold tracking-tight text-primary uppercase">
                             ENVIRONMENT MONITORING
                         </h1>
-                        {title && (
-                            <p className="text-[10px] md:text-sm text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-0.5 md:mt-1">
-                                {title}
-                            </p>
-                        )}
+                        <p className="text-[10px] md:text-sm text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-0.5 md:mt-1">
+                            {currentTitle}
+                        </p>
                     </div>
 
                     {/* Right Controls */}
@@ -166,7 +176,7 @@ export default function Layout({ title, subtitle, onTogglePause, isPaused, child
                         transition={{ duration: 0.4, ease: "easeInOut" }}
                         className="h-full w-full"
                     >
-                        {children}
+                        <Outlet />
                     </motion.div>
                 </AnimatePresence>
 

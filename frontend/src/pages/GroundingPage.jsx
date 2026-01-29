@@ -5,8 +5,9 @@ import { useAutoCycle } from '../hooks/useAutoCycle';
 import { useAlarm } from '../hooks/useAlarm';
 
 export default function GroundingPage() {
-    // Auto Cycle Logic
-    const { isPaused, togglePause } = useAutoCycle(['/monitor-smt', '/monitor-area', '/monitor-facility', '/monitor-grounding']);
+    // Auto Cycle Logic - Moved to Layout
+    // const { isPaused, togglePause } = useAutoCycle(['/monitor-smt', '/monitor-area', '/monitor-facility', '/monitor-grounding']);
+
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -47,25 +48,19 @@ export default function GroundingPage() {
     useAlarm(isAlarming);
 
     return (
-        <Layout
-            title="GROUNDING CHECKER MONITORING"
-            subtitle=""
-            onTogglePause={togglePause}
-            isPaused={isPaused}
-        >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-auto md:grid-rows-4 lg:grid-rows-2 gap-4 md:gap-6 h-full pb-2 md:pb-6">
-                {fixedLocations.map(loc => {
-                    const item = dataMap.get(loc);
-                    return (
-                        <GroundingCard
-                            key={loc}
-                            location={loc}
-                            description={locationDescriptions[loc]}
-                            item={item}
-                        />
-                    );
-                })}
-            </div>
-        </Layout>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-auto md:grid-rows-4 lg:grid-rows-2 gap-4 md:gap-6 h-full pb-2 md:pb-6">
+            {fixedLocations.map(loc => {
+                const item = dataMap.get(loc);
+                return (
+                    <GroundingCard
+                        key={loc}
+                        location={loc}
+                        description={locationDescriptions[loc]}
+                        item={item}
+                    />
+                );
+            })}
+        </div>
     );
 }
+

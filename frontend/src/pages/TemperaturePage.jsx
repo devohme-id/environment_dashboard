@@ -42,15 +42,11 @@ const pageConfig = {
 };
 
 export default function TemperaturePage({ pageId }) {
-    // const { pageId } = useParams(); // No longer needed
     const currentPage = parseInt(pageId) || 1;
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [lastUpdate, setLastUpdate] = useState(null);
-
-    // Auto Cycle Logic
-    const { isPaused, togglePause } = useAutoCycle(['/monitor-smt', '/monitor-area', '/monitor-facility', '/monitor-grounding']);
 
     // Data Fetching
     useEffect(() => {
@@ -129,45 +125,38 @@ export default function TemperaturePage({ pageId }) {
     };
 
     return (
-        <Layout
-            title={config.title}
-            subtitle={lastUpdate ? `Last updated: ${lastUpdate.toLocaleTimeString()}` : 'Updating...'}
-            onTogglePause={togglePause}
-            isPaused={isPaused}
-        >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-auto md:grid-rows-3 lg:grid-rows-2 gap-4 md:gap-6 h-full pb-2 md:pb-6">
-                {config.charts.map((chart, index) => {
-                    if (chart.type === 'empty') return <div key={index} className="hidden lg:block"></div>;
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-auto md:grid-rows-3 lg:grid-rows-2 gap-4 md:gap-6 h-full pb-2 md:pb-6">
+            {config.charts.map((chart, index) => {
+                if (chart.type === 'empty') return <div key={index} className="hidden lg:block"></div>;
 
-                    const status = getCardStatus(chart);
+                const status = getCardStatus(chart);
 
-                    return (
-                        <div key={index} className={clsx(
-                            "bg-white dark:bg-slate-800 rounded-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] p-2 flex flex-col min-h-[300px] md:min-h-0 h-full transition-all duration-300 border border-slate-100 dark:border-slate-700",
-                            "border-l-[10px]", // Thick left border
-                            statusStyles[status] || statusStyles.default
-                        )}>
-                            <div className="flex flex-col items-center justify-center mb-1 pt-2">
-                                <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base md:text-lg">
-                                    {chart.title}
-                                </h3>
-                                {status === 'anomaly' && (
-                                    <span className="text-[10px] text-status-anomaly font-bold italic">Anomaly: Sensor Offline</span>
-                                )}
-                            </div>
-                            <div className="flex-1 relative w-full min-h-0 bg-transparent rounded-lg">
-                                <TempChart
-                                    title={chart.title}
-                                    type={chart.type}
-                                    limits={chart.limits}
-                                    devices={chart.devices}
-                                    data={data}
-                                />
-                            </div>
+                return (
+                    <div key={index} className={clsx(
+                        "bg-white dark:bg-slate-800 rounded-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] p-2 flex flex-col min-h-[300px] md:min-h-0 h-full transition-all duration-300 border border-slate-100 dark:border-slate-700",
+                        "border-l-[10px]", // Thick left border
+                        statusStyles[status] || statusStyles.default
+                    )}>
+                        <div className="flex flex-col items-center justify-center mb-1 pt-2">
+                            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base md:text-lg">
+                                {chart.title}
+                            </h3>
+                            {status === 'anomaly' && (
+                                <span className="text-[10px] text-status-anomaly font-bold italic">Anomaly: Sensor Offline</span>
+                            )}
                         </div>
-                    );
-                })}
-            </div>
-        </Layout>
+                        <div className="flex-1 relative w-full min-h-0 bg-transparent rounded-lg">
+                            <TempChart
+                                title={chart.title}
+                                type={chart.type}
+                                limits={chart.limits}
+                                devices={chart.devices}
+                                data={data}
+                            />
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
     );
 }
