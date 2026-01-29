@@ -9,7 +9,7 @@
 @layer base {
   @font-face {
     font-family: 'LGEI Headline';
-    src: url('./assets/fonts/LGEIHeadlineTTF-Regular.ttf') format('truetype');
+    src: url('./assets/fonts/LGEIHeadlineTTF-Regular.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
   }

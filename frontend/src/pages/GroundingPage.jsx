@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import Layout from '../components/Layout';
 import GroundingCard from '../components/GroundingCard';
 import { useAutoCycle } from '../hooks/useAutoCycle';
@@ -8,26 +9,17 @@ export default function GroundingPage() {
     // Auto Cycle Logic - Moved to Layout
     // const { isPaused, togglePause } = useAutoCycle(['/monitor-smt', '/monitor-area', '/monitor-facility', '/monitor-grounding']);
 
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { data: rawData, isLoading: loading } = useQuery({
+        queryKey: ['groundingStatus'],
+        queryFn: async () => {
+            const res = await fetch('http://localhost:3000/api/grounding');
+            if (!res.ok) throw new Error("Failed");
+            return res.json();
+        },
+        staleTime: 60000,
+    });
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await fetch('http://localhost:3000/api/status');
-                if (!res.ok) throw new Error("Failed");
-                const jsonData = await res.json();
-                setData(jsonData);
-                setLoading(false);
-            } catch (err) {
-                console.error(err);
-                setLoading(false);
-            }
-        };
-        fetchData();
-        const interval = setInterval(fetchData, 2000);
-        return () => clearInterval(interval);
-    }, []);
+    const data = rawData || [];
 
     const fixedLocations = ["WH_01", "WH_02", "LineProd_01", "LineProd_02", "LineProd_03", "LineProd_04", "LineProd_05", "LineProd_06"];
     const locationDescriptions = {

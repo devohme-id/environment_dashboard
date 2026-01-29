@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-export function useAutoCycle(routes, interval = 15000) {
+export function useAutoCycle(routes, interval = 8000) {
     const navigate = useNavigate();
     const location = useLocation();
     const [isPaused, setIsPaused] = useState(false);

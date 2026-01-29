@@ -15,13 +15,15 @@ const TITLE_MAP = {
     '/monitor-grounding': 'GROUNDING CHECKER MONITORING'
 };
 
+const CYCLE_ROUTES = ['/monitor-smt', '/monitor-area', '/monitor-facility', '/monitor-grounding'];
+
 export default function Layout({ children }) {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { isMuted, toggleMute } = useAlarmContext();
 
     // Auto Cycle Logic (Lifted from pages)
-    const { isPaused, togglePause } = useAutoCycle(['/monitor-smt', '/monitor-area', '/monitor-facility', '/monitor-grounding']);
+    const { isPaused, togglePause } = useAutoCycle(CYCLE_ROUTES);
 
     // Dark Mode Logic
     const [isDarkMode, setIsDarkMode] = useState(() => {

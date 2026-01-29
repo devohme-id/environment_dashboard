@@ -82,7 +82,9 @@ async function routes(fastify, options) {
 
     // Endpoint: Get Grounding Status
     // Replaces: get_latest_status.php
-    fastify.get('/status', async (request, reply) => {
+    // Endpoint: Get Grounding Status
+    // Replaces: get_latest_status.php
+    fastify.get('/grounding', async (request, reply) => {
         try {
             const sql = `
                 SELECT t1.*

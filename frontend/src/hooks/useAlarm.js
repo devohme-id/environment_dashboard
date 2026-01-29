@@ -2,34 +2,22 @@ import { useEffect, useRef } from 'react';
 import { useAlarmContext } from '../context/AlarmContext';
 
 export const useAlarm = (shouldPlay) => {
-    const audioRef = useRef(null);
-    const { isMuted } = useAlarmContext();
+    const { playAlarm, pauseAlarm, isMuted } = useAlarmContext();
 
     useEffect(() => {
-        // Initialize audio object if not clean
-        if (!audioRef.current) {
-            audioRef.current = new Audio('/alarm.wav');
-            audioRef.current.loop = true;
-        }
-
-        const audio = audioRef.current;
-
         if (shouldPlay && !isMuted) {
-            // Attempt to play
-            const playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(err => {
-                    console.warn("Audio play failed (autoplay blocked?)", err);
-                });
-            }
+            playAlarm();
         } else {
-            audio.pause();
-            audio.currentTime = 0;
+            pauseAlarm();
         }
 
+        // Cleanup: pause on unmount or when condition changes
         return () => {
-            audio.pause();
-            audio.currentTime = 0;
+            // We only pause if we were the one playing? 
+            // For now, simple logic: if this hook unmounts or stops requesting alarm, pause.
+            if (shouldPlay) {
+                pauseAlarm();
+            }
         };
-    }, [shouldPlay, isMuted]);
+    }, [shouldPlay, isMuted, playAlarm, pauseAlarm]);
 };
