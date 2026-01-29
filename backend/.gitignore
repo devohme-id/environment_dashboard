@@ -1,0 +1,33 @@
+# Basics
+node_modules/
+.DS_Store
+
+# Environment Variables (Critical for Security)
+.env
+.env.production
+.env.development
+.env.test
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Editor/Os
+.idea
+.vscode
+*.swp
+*.swo
