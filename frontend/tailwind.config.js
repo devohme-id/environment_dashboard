@@ -4,6 +4,7 @@ export default {
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
     ],
+    darkMode: 'class',
     theme: {
         extend: {
             colors: {
@@ -43,9 +44,9 @@ export default {
                 }
             },
             animation: {
-                'flash-warning': 'flash-warning 1s infinite',
-                'flash-danger': 'flash-danger 1s infinite',
-                'flash-anomaly': 'flash-anomaly 1s infinite',
+                'flash-warning': 'flash-warning 3s infinite',
+                'flash-danger': 'flash-danger 3s infinite',
+                'flash-anomaly': 'flash-anomaly 3s infinite',
                 'flow': 'flow 1.5s ease-in-out infinite',
                 'shake': 'shake 0.5s ease-in-out infinite',
             }

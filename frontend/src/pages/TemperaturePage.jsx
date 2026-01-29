@@ -135,15 +135,15 @@ export default function TemperaturePage({ pageId }) {
             onTogglePause={togglePause}
             isPaused={isPaused}
         >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:grid-rows-3 lg:grid-rows-2 gap-6 h-full pb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-auto md:grid-rows-3 lg:grid-rows-2 gap-4 md:gap-6 h-full pb-2 md:pb-6">
                 {config.charts.map((chart, index) => {
-                    if (chart.type === 'empty') return <div key={index} className="hidden md:block"></div>;
+                    if (chart.type === 'empty') return <div key={index} className="hidden lg:block"></div>;
 
                     const status = getCardStatus(chart);
 
                     return (
                         <div key={index} className={clsx(
-                            "bg-white dark:bg-slate-800 rounded-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] p-2 flex flex-col h-full transition-all duration-300 border border-slate-100 dark:border-slate-700",
+                            "bg-white dark:bg-slate-800 rounded-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] p-2 flex flex-col min-h-[300px] md:min-h-0 h-full transition-all duration-300 border border-slate-100 dark:border-slate-700",
                             "border-l-[10px]", // Thick left border
                             statusStyles[status] || statusStyles.default
                         )}>

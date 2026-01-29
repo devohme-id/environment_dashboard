@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation, Link } from 'react-router-dom';
-import { IconMenu2, IconVolume, IconVolumeOff, IconClock, IconCalendar, IconPlayerPlay, IconPlayerPause } from '@tabler/icons-react';
+import { IconMenu2, IconVolume, IconVolumeOff, IconClock, IconCalendar, IconPlayerPlay, IconPlayerPause, IconMoon, IconSun } from '@tabler/icons-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,6 +11,29 @@ export default function Layout({ title, subtitle, onTogglePause, isPaused, child
     const [currentTime, setCurrentTime] = useState(new Date());
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { isMuted, toggleMute } = useAlarmContext();
+
+    // Dark Mode Logic
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem('theme');
+            return saved === 'dark';
+        }
+        return false;
+    });
+
+    useEffect(() => {
+        const root = window.document.documentElement;
+        if (isDarkMode) {
+            root.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            root.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+    }, [isDarkMode]);
+
+    const toggleTheme = () => setIsDarkMode(!isDarkMode);
+
     const location = useLocation();
 
     // Clock effect
@@ -36,27 +59,38 @@ export default function Layout({ title, subtitle, onTogglePause, isPaused, child
     return (
         <div className="flex flex-col h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 overflow-hidden font-sans">
             {/* Header */}
-            {/* Header */}
-            <header className="flex-none min-h-[80px] bg-white dark:bg-slate-800 shadow-sm border-b-4 border-primary z-20 relative transition-all duration-300">
-                <div className="w-full flex flex-col md:grid md:grid-cols-[1fr_auto_1fr] items-center p-2 md:px-6 gap-2 md:gap-0">
+            <header className="flex-none bg-white dark:bg-slate-800 shadow-sm border-b-4 border-primary z-20 relative transition-all duration-300">
+                <div className="w-full flex md:grid md:grid-cols-[1fr_auto_1fr] flex-col md:flex-row items-center p-2 md:px-6 gap-2 md:gap-0">
 
                     {/* Left Spacer (Desktop) / Hidden (Mobile) */}
                     <div className="hidden md:block"></div>
 
                     {/* Center Title */}
                     <div className="flex flex-col items-center justify-center text-center w-full order-1 md:order-none">
-                        <h1 className="text-xl md:text-3xl font-bold tracking-tight text-primary uppercase">
+                        <h1 className="text-lg md:text-3xl font-bold tracking-tight text-primary uppercase">
                             ENVIRONMENT MONITORING
                         </h1>
                         {title && (
-                            <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">
+                            <p className="text-[10px] md:text-sm text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-0.5 md:mt-1">
                                 {title}
                             </p>
                         )}
                     </div>
 
                     {/* Right Controls */}
-                    <div className="flex items-center justify-center md:justify-end gap-2 md:gap-4 w-full md:w-auto order-2 md:order-none">
+                    <div className="flex items-center justify-center md:justify-end gap-2 md:gap-4 w-full md:w-auto order-2 md:order-none pb-2 md:pb-0">
+                        {/* Theme Toggle */}
+                        <button
+                            onClick={toggleTheme}
+                            className={cn(
+                                "p-1.5 md:p-2 rounded border transition-all shadow-sm",
+                                isDarkMode ? "bg-slate-800 text-yellow-400 border-slate-700 hover:bg-slate-700" : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50"
+                            )}
+                            title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                        >
+                            {isDarkMode ? <IconSun size={20} /> : <IconMoon size={20} />}
+                        </button>
+
                         {/* Navigation */}
                         <div className="relative">
                             <button
@@ -109,8 +143,8 @@ export default function Layout({ title, subtitle, onTogglePause, isPaused, child
                         </button>
 
                         {/* Clock */}
-                        <div className="flex flex-col items-end leading-tight min-w-[100px] md:min-w-[140px]">
-                            <div className="text-xl md:text-2xl font-bold font-mono text-slate-700 dark:text-slate-200 tabular-nums tracking-wide">
+                        <div className="flex flex-col items-end leading-tight min-w-[80px] md:min-w-[140px]">
+                            <div className="text-lg md:text-2xl font-bold font-mono text-slate-700 dark:text-slate-200 tabular-nums tracking-wide">
                                 {formattedTime}
                             </div>
                             <div className="text-[9px] md:text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest hidden md:block">
@@ -121,8 +155,8 @@ export default function Layout({ title, subtitle, onTogglePause, isPaused, child
                 </div>
             </header>
 
-            {/* Main Content */}
-            <main className="flex-1 overflow-auto p-4 relative bg-brand-bg">
+            {/* Main Content - Improved scrolling context */}
+            <main className="flex-1 overflow-y-auto overflow-x-hidden p-2 md:p-4 relative bg-brand-bg w-full">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={location.pathname}
@@ -130,55 +164,55 @@ export default function Layout({ title, subtitle, onTogglePause, isPaused, child
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.98 }}
                         transition={{ duration: 0.4, ease: "easeInOut" }}
-                        className="h-full"
+                        className="h-full w-full"
                     >
                         {children}
                     </motion.div>
                 </AnimatePresence>
 
                 {isPaused && (
-                    <div className="absolute bottom-4 right-4 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-bold shadow-sm opacity-80 pointer-events-none z-10">
+                    <div className="fixed bottom-4 right-4 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-bold shadow-sm opacity-80 pointer-events-none z-50">
                         AUTO-CYCLE PAUSED
                     </div>
                 )}
             </main>
 
             {/* Footer */}
-            <footer className="flex-none bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex flex-col justify-center px-4 md:px-6 py-2 text-xs text-slate-600 font-medium gap-1 z-10 relative shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <footer className="flex-none bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex flex-col justify-center px-4 md:px-6 py-2 text-xs text-slate-600 font-medium gap-1 z-10 relative shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] text-center md:text-left">
                 {/* Row 1: Legends */}
-                <div className="flex items-center gap-6">
+                <div className="flex flex-wrap justify-center md:justify-start items-center gap-3 md:gap-6">
                     {location.pathname === '/monitor-grounding' ? (
                         <>
                             <span className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-status-safe rounded-sm"></span> <span className="font-bold uppercase">Ground path is normal</span>
+                                <span className="w-2 h-2 md:w-3 md:h-3 bg-status-safe rounded-sm"></span> <span className="font-bold uppercase text-[10px] md:text-xs">Ground path is normal</span>
                             </span>
                             <span className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-status-danger rounded-sm"></span> <span className="font-bold uppercase">Ground path has a fault</span>
+                                <span className="w-2 h-2 md:w-3 md:h-3 bg-status-danger rounded-sm"></span> <span className="font-bold uppercase text-[10px] md:text-xs">Ground path has a fault</span>
                             </span>
                             <span className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-status-anomaly rounded-sm"></span> <span className="font-bold uppercase">Anomaly Sensor</span>
+                                <span className="w-2 h-2 md:w-3 md:h-3 bg-status-anomaly rounded-sm"></span> <span className="font-bold uppercase text-[10px] md:text-xs">Anomaly Sensor</span>
                             </span>
                         </>
                     ) : (
                         <>
                             <span className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-status-safe rounded-sm"></span> <span className="font-bold">SAFE</span>
+                                <span className="w-2 h-2 md:w-3 md:h-3 bg-status-safe rounded-sm"></span> <span className="font-bold text-[10px] md:text-xs">SAFE</span>
                             </span>
                             <span className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-status-warning rounded-sm"></span> <span className="font-bold">WARNING</span>
+                                <span className="w-2 h-2 md:w-3 md:h-3 bg-status-warning rounded-sm"></span> <span className="font-bold text-[10px] md:text-xs">WARNING</span>
                             </span>
                             <span className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-status-danger rounded-sm"></span> <span className="font-bold">DANGER</span>
+                                <span className="w-2 h-2 md:w-3 md:h-3 bg-status-danger rounded-sm"></span> <span className="font-bold text-[10px] md:text-xs">DANGER</span>
                             </span>
                             <span className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-status-anomaly rounded-sm"></span> <span className="font-bold">ANOMALY SENSOR</span>
+                                <span className="w-2 h-2 md:w-3 md:h-3 bg-status-anomaly rounded-sm"></span> <span className="font-bold text-[10px] md:text-xs">ANOMALY SENSOR</span>
                             </span>
                         </>
                     )}
                 </div>
 
                 {/* Row 2: Info & Disclaimer */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 border-t border-slate-100 dark:border-slate-700 pt-1 mt-1">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 border-t border-slate-100 dark:border-slate-700 pt-1 mt-1 hidden md:flex">
                     <div className="flex flex-wrap gap-1 md:gap-4 text-[11px] md:text-xs text-slate-500">
                         {location.pathname === '/monitor-grounding' ? (
                             <span>Grounding Resistance Monitoring System with Real-Time Alert</span>

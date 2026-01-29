@@ -226,13 +226,25 @@ export default function TempChart({
         const colors = ['#22c55e', '#f59e0b', '#8b5cf6', '#ef4444', '#3b82f6', '#eab308'];
         let colorIdx = 0;
 
-        // Find common labels (timestamps) from first device
-        const firstDevId = Object.keys(devices)[0];
-        if (data[firstDevId]) {
-            data[firstDevId].forEach(d => {
+        // Find common labels (timestamps) from the first device that has data
+        let labelSourceData = null;
+        for (const devId in devices) {
+            if (data[devId] && data[devId].length > 0) {
+                labelSourceData = data[devId];
+                break;
+            }
+        }
+
+        if (labelSourceData) {
+            labelSourceData.forEach(d => {
                 // Format time: HH:mm
                 const date = new Date(d.created_at);
-                labels.push(date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }));
+                if (!isNaN(date)) {
+                    labels.push(date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }));
+                } else {
+                    // Fallback for invalid dates if necessary, or skip
+                    labels.push('??:??');
+                }
             });
         }
 
