@@ -7,11 +7,24 @@ async function routes(fastify, options) {
 
     // Endpoint: Get Temperature & Humidity Data
     // Replaces: get_temphygro_data.php
+    // Endpoint: Get Temperature & Humidity Data
+    // Replaces: get_temphygro_data.php
     fastify.get('/temphygro', async (request, reply) => {
         const page = parseInt(request.query.page) || 1;
-        let data = {};
+        const cacheKey = `api:temphygro:page:${page}`;
 
         try {
+            // 1. Try to get data from Redis
+            const cachedData = await fastify.redis.get(cacheKey);
+            if (cachedData) {
+                // fastify.log.info(`Cache HIT for ${cacheKey}`);
+                return JSON.parse(cachedData);
+            }
+
+            // fastify.log.info(`Cache MISS for ${cacheKey}`);
+
+            let data = {};
+
             if (page === 3) {
                 // Logic for Page 3 (Facility)
 
@@ -72,6 +85,10 @@ async function routes(fastify, options) {
                 data[devid].reverse();
             }
 
+            // 2. Save to Redis
+            // Expiration: 15 minutes = 900 seconds
+            await fastify.redis.set(cacheKey, JSON.stringify(data), 'EX', 900);
+
             return data;
 
         } catch (error) {
@@ -82,10 +99,19 @@ async function routes(fastify, options) {
 
     // Endpoint: Get Grounding Status
     // Replaces: get_latest_status.php
-    // Endpoint: Get Grounding Status
-    // Replaces: get_latest_status.php
     fastify.get('/grounding', async (request, reply) => {
+        const cacheKey = 'api:grounding:status';
+
         try {
+            // 1. Try to get data from Redis
+            const cachedData = await fastify.redis.get(cacheKey);
+            if (cachedData) {
+                // fastify.log.info(`Cache HIT for ${cacheKey}`);
+                return JSON.parse(cachedData);
+            }
+
+            // fastify.log.info(`Cache MISS for ${cacheKey}`);
+
             const sql = `
                 SELECT t1.*
                 FROM grounding_logs t1
@@ -120,6 +146,10 @@ async function routes(fastify, options) {
                 }
                 return row;
             });
+
+            // 2. Save to Redis
+            // Expiration: 15 minutes = 900 seconds
+            await fastify.redis.set(cacheKey, JSON.stringify(modifiedRows), 'EX', 900);
 
             return modifiedRows;
 

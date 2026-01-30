@@ -62,9 +62,12 @@ fastify.register(async function (apiScope) {
     apiScope.register(require('./routes/api'));
 }, { prefix: '/api' });
 
+const monitoring = require('./monitoring'); // Import monitoring service
+
 // Run the server
 const start = async () => {
     try {
+        monitoring.startMonitoring(fastify.redis); // Start monitoring with Redis
         await fastify.listen({ port: process.env.PORT || 3000, host: '0.0.0.0' });
         // fastify.log.info(`server listening on ${fastify.server.address().port}`); // Logger handles this automatically
     } catch (err) {
