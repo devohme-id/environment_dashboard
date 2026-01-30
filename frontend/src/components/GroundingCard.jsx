@@ -59,7 +59,7 @@ export default function GroundingCard({ location, description, item }) {
 
     return (
         <div className={clsx(
-            "relative min-h-[250px] md:min-h-0 h-full rounded-2xl shadow-sm flex flex-col items-center p-6 transition-all border",
+            "relative min-h-[250px] h-full rounded-2xl shadow-sm flex flex-col items-center p-6 transition-all border overflow-hidden",
             "border-l-[12px]", // Thicker Left Border
             currentStyle.border,
             currentStyle.bg
@@ -94,7 +94,7 @@ export default function GroundingCard({ location, description, item }) {
 
             {/* Footer Status */}
             <div className="text-center space-y-2 mb-2 w-full">
-                <div className={clsx("text-xl md:text-3xl font-black tracking-widest uppercase", currentStyle.text)}>
+                <div className={clsx("text-xl md:text-2xl font-black tracking-widest uppercase", currentStyle.text)}>
                     {displayStatus}
                 </div>
                 <div className="flex items-center justify-center gap-2 text-[10px] md:text-xs font-bold text-slate-400 bg-slate-100 rounded-full py-1 px-3 w-fit mx-auto">

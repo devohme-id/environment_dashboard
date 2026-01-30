@@ -74,14 +74,14 @@ export default function Layout({ children }) {
         <div className="flex flex-col h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 overflow-hidden font-sans">
             {/* Header */}
             <header className="flex-none bg-white dark:bg-slate-800 shadow-sm border-b-4 border-primary z-20 relative transition-all duration-300">
-                <div className="w-full flex md:grid md:grid-cols-[1fr_auto_1fr] flex-col md:flex-row items-center p-2 md:px-6 gap-2 md:gap-0">
+                <div className="w-full flex md:grid md:grid-cols-[1fr_auto_1fr] flex-col md:flex-row items-center p-2 md:px-6 gap-2 md:gap-6">
 
                     {/* Left Spacer (Desktop) / Hidden (Mobile) */}
                     <div className="hidden md:block"></div>
 
                     {/* Center Title */}
                     <div className="flex flex-col items-center justify-center text-center w-full order-1 md:order-none">
-                        <h1 className="text-lg md:text-3xl font-bold tracking-tight text-primary uppercase">
+                        <h1 className="text-lg md:text-2xl lg:text-3xl font-bold tracking-tight text-primary uppercase">
                             ENVIRONMENT MONITORING
                         </h1>
                         <p className="text-[10px] md:text-sm text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-0.5 md:mt-1">
