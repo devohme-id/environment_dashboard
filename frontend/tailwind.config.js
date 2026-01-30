@@ -21,16 +21,16 @@ export default {
             },
             keyframes: {
                 'flash-warning': {
-                    '0%, 100%': { backgroundColor: '#fef3c7' }, // amber-100
-                    '50%': { backgroundColor: '#fbbf24' },      // amber-400 - Deeper User Request
+                    '0%, 100%': { backgroundColor: 'var(--flash-warning-from)' },
+                    '50%': { backgroundColor: 'var(--flash-warning-to)' },
                 },
                 'flash-danger': {
-                    '0%, 100%': { backgroundColor: '#fee2e2' }, // red-100
-                    '50%': { backgroundColor: '#f87171' },      // red-400
+                    '0%, 100%': { backgroundColor: 'var(--flash-danger-from)' },
+                    '50%': { backgroundColor: 'var(--flash-danger-to)' },
                 },
                 'flash-anomaly': {
-                    '0%, 100%': { backgroundColor: '#f3e8ff' }, // purple-100
-                    '50%': { backgroundColor: '#c084fc' },      // purple-400
+                    '0%, 100%': { backgroundColor: 'var(--flash-anomaly-from)' },
+                    '50%': { backgroundColor: 'var(--flash-anomaly-to)' },
                 },
                 'flow': {
                     '0%': { opacity: '0.3', transform: 'translateX(-2px)' },

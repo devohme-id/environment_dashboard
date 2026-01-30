@@ -132,7 +132,7 @@ export default function Layout({ children }) {
                                         ))}
                                         <div className="h-px bg-slate-100 dark:bg-slate-700 my-1" />
                                         <button
-                                            onClick={() => { onTogglePause && onTogglePause(); setIsMenuOpen(false); }}
+                                            onClick={() => { togglePause(); setIsMenuOpen(false); }}
                                             className="px-4 py-3 text-sm font-medium w-full text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500 flex items-center gap-2"
                                         >
                                             {isPaused ? <><IconPlayerPlay size={16} /> Resume Auto-Cycle</> : <><IconPlayerPause size={16} /> Pause Auto-Cycle</>}
@@ -168,7 +168,7 @@ export default function Layout({ children }) {
             </header>
 
             {/* Main Content - Improved scrolling context */}
-            <main className="flex-1 overflow-y-auto overflow-x-hidden p-2 md:p-4 relative bg-brand-bg w-full">
+            <main className="flex-1 overflow-y-auto overflow-x-hidden p-2 md:p-4 relative bg-slate-100 dark:bg-slate-950 w-full">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={location.pathname}
@@ -178,7 +178,7 @@ export default function Layout({ children }) {
                         transition={{ duration: 0.4, ease: "easeInOut" }}
                         className="h-full w-full"
                     >
-                        <Outlet />
+                        <Outlet context={{ isDarkMode }} />
                     </motion.div>
                 </AnimatePresence>
 
@@ -190,7 +190,7 @@ export default function Layout({ children }) {
             </main>
 
             {/* Footer */}
-            <footer className="flex-none bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex flex-col justify-center px-4 md:px-6 py-2 text-xs text-slate-600 font-medium gap-1 z-10 relative shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] text-center md:text-left">
+            <footer className="flex-none bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex flex-col justify-center px-4 md:px-6 py-2 text-xs text-slate-600 dark:text-slate-300 font-medium gap-1 z-10 relative shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] text-center md:text-left">
                 {/* Row 1: Legends */}
                 <div className="flex flex-wrap justify-center md:justify-start items-center gap-3 md:gap-6">
                     {location.pathname === '/monitor-grounding' ? (
@@ -225,20 +225,20 @@ export default function Layout({ children }) {
 
                 {/* Row 2: Info & Disclaimer */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 border-t border-slate-100 dark:border-slate-700 pt-1 mt-1 hidden md:flex">
-                    <div className="flex flex-wrap gap-1 md:gap-4 text-[11px] md:text-xs text-slate-500">
+                    <div className="flex flex-wrap gap-1 md:gap-4 text-[11px] md:text-xs text-slate-500 dark:text-slate-200">
                         {location.pathname === '/monitor-grounding' ? (
                             <span>Grounding Resistance Monitoring System with Real-Time Alert</span>
                         ) : (
                             <>
                                 <span>Temperature: 22 ~ 28°C</span>
-                                <span className="hidden md:inline text-slate-300">|</span>
+                                <span className="hidden md:inline text-slate-300 dark:text-slate-500">|</span>
                                 <span>Humidity: 30 ~ 60%</span>
-                                <span className="hidden md:inline text-slate-300">|</span>
+                                <span className="hidden md:inline text-slate-300 dark:text-slate-500">|</span>
                                 <span>Air Pressure: 5.5 ~ 7.5 KGF/CM²</span>
                             </>
                         )}
                     </div>
-                    <div className="italic text-slate-400 text-[10px] md:text-xs md:text-right">
+                    <div className="italic text-slate-400 dark:text-slate-400 text-[10px] md:text-xs md:text-right">
                         Status is updated automatically. Alarm and blinking animation are active only during a limit breach
                     </div>
                 </div>

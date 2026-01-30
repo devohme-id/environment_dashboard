@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useParams, useOutletContext } from 'react-router-dom';
 import Layout from '../components/Layout';
 import TempChart from '../components/TempChart';
 import { useAutoCycle } from '../hooks/useAutoCycle';
@@ -46,6 +46,7 @@ const pageConfig = {
 
 export default function TemperaturePage({ pageId }) {
     const currentPage = parseInt(pageId) || 1;
+    const { isDarkMode } = useOutletContext() || {}; // Safe access if no context
 
     // Data Fetching with TanStack Query
     const { data: rawData, isLoading: loading, error } = useQuery({
@@ -155,6 +156,7 @@ export default function TemperaturePage({ pageId }) {
                                 limits={chart.limits}
                                 devices={chart.devices}
                                 data={data}
+                                isDarkMode={isDarkMode}
                             />
                         </div>
                     </div>

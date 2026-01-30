@@ -27,3 +27,29 @@
     font-family: 'LGEI Text', sans-serif;
   }
 }
+
+@layer utilities {
+  :root {
+    /* Light Mode Flash Colors */
+    --flash-warning-from: #fef3c7; /* amber-100 */
+    --flash-warning-to: #fbbf24;   /* amber-400 */
+    
+    --flash-danger-from: #fee2e2;  /* red-100 */
+    --flash-danger-to: #f87171;    /* red-400 */
+    
+    --flash-anomaly-from: #f3e8ff; /* purple-100 */
+    --flash-anomaly-to: #c084fc;   /* purple-400 */
+  }
+
+  .dark {
+    /* Dark Mode Flash Colors (Inverted/Darker) */
+    --flash-warning-from: #1e293b; /* slate-800 (Card Bg) */
+    --flash-warning-to: #78350f;   /* amber-900 */
+    
+    --flash-danger-from: #1e293b;  /* slate-800 */
+    --flash-danger-to: #7f1d1d;    /* red-900 */
+    
+    --flash-anomaly-from: #1e293b; /* slate-800 */
+    --flash-anomaly-to: #581c87;   /* purple-900 */
+  }
+}

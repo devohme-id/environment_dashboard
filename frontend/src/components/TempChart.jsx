@@ -31,7 +31,8 @@ export default function TempChart({
     data,
     type = 'temperature',
     limits,
-    devices
+    devices,
+    isDarkMode
 }) {
     if (!data || Object.keys(data).length === 0) {
         return (
@@ -67,6 +68,17 @@ export default function TempChart({
                 break;
         }
 
+        const theme = {
+            grid: isDarkMode ? '#334155' : '#e2e8f0', // slate-700 : slate-200
+            text: isDarkMode ? '#94a3b8' : '#64748b', // slate-400 : slate-500
+            title: isDarkMode ? '#f1f5f9' : '#1e293b', // slate-100 : slate-800
+            legend: isDarkMode ? '#cbd5e1' : '#334155', // slate-300 : slate-700
+            tooltipBg: isDarkMode ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)', // slate-800 : white
+            tooltipText: isDarkMode ? '#f1f5f9' : '#1e293b',
+            tooltipBody: isDarkMode ? '#cbd5e1' : '#334155',
+            tooltipBorder: isDarkMode ? '#475569' : '#e2e8f0'
+        };
+
         const annotations = {};
         if (limits) {
             // Safe Zone (Greenish)
@@ -74,17 +86,15 @@ export default function TempChart({
                 type: 'box',
                 yMin: limits.uw,
                 yMax: limits.lw,
-                backgroundColor: 'rgba(34, 197, 94, 0.05)',
+                backgroundColor: isDarkMode ? 'rgba(34, 197, 94, 0.1)' : 'rgba(34, 197, 94, 0.05)',
                 borderWidth: 0
             };
-            // Warning Zones (Reddish) - handled via background colors?
-            // Actually let's replicate the original zones
             // Upper Warning
             annotations.upperWarningZone = {
                 type: 'box',
                 yMin: limits.lw,
                 yMax: limits.lm,
-                backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)',
                 borderWidth: 0
             };
             // Lower Warning
@@ -92,7 +102,7 @@ export default function TempChart({
                 type: 'box',
                 yMin: limits.um,
                 yMax: limits.uw,
-                backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)',
                 borderWidth: 0
             };
 
@@ -112,7 +122,7 @@ export default function TempChart({
                     font: { size: 11, weight: 'bold', family: "'Inter', sans-serif" },
                     padding: { top: 6, bottom: 6, left: 10, right: 10 },
                     borderRadius: 6,
-                    yAdjust: -12 // Position slightly above line
+                    yAdjust: -12
                 }
             };
             annotations.minLine = {
@@ -130,7 +140,7 @@ export default function TempChart({
                     font: { size: 11, weight: 'bold', family: "'Inter', sans-serif" },
                     padding: { top: 6, bottom: 6, left: 10, right: 10 },
                     borderRadius: 6,
-                    yAdjust: 12 // Position slightly below line
+                    yAdjust: 12
                 }
             };
         }
@@ -142,10 +152,10 @@ export default function TempChart({
                 legend: {
                     position: 'top',
                     labels: {
-                        usePointStyle: false, // Use default boxes
+                        usePointStyle: false,
                         boxWidth: 40,
                         font: { family: "'Inter', sans-serif", size: 12 },
-                        color: '#334155'
+                        color: theme.legend
                     }
                 },
                 title: {
@@ -155,10 +165,10 @@ export default function TempChart({
                     annotations: annotations
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    titleColor: '#1e293b',
-                    bodyColor: '#334155',
-                    borderColor: '#e2e8f0',
+                    backgroundColor: theme.tooltipBg,
+                    titleColor: theme.tooltipText,
+                    bodyColor: theme.tooltipBody,
+                    borderColor: theme.tooltipBorder,
                     borderWidth: 1,
                     padding: 10,
                     cornerRadius: 4,
@@ -172,31 +182,31 @@ export default function TempChart({
                     max: yMax,
                     ticks: {
                         stepSize: stepSize,
-                        color: '#64748b',
+                        color: theme.text,
                         font: { size: 11 }
                     },
                     grid: {
-                        color: '#e2e8f0',
+                        color: theme.grid,
                         drawBorder: false,
                     },
                     title: {
                         display: true,
-                        text: type === 'temperature' ? 'Suhu (°C)' : yLabel, // Use Indonesian 'Suhu'
-                        color: '#1e293b',
+                        text: type === 'temperature' ? 'Suhu (°C)' : yLabel,
+                        color: theme.title,
                         font: { size: 12, weight: 'bold' }
                     }
                 },
                 x: {
                     ticks: {
-                        color: '#64748b',
+                        color: theme.text,
                         font: { size: 10 },
                         maxRotation: 0,
                         autoSkip: true,
-                        maxTicksLimit: 12 // Show more ticks for 12 hours
+                        maxTicksLimit: 12
                     },
                     grid: {
-                        display: true, // Show vertical grid
-                        color: '#f1f5f9'
+                        display: true,
+                        color: theme.grid
                     }
                 }
             },
@@ -206,10 +216,10 @@ export default function TempChart({
             },
             elements: {
                 point: {
-                    radius: 4, // Visible points
+                    radius: 4,
                     hoverRadius: 6,
                     borderWidth: 2,
-                    backgroundColor: '#fff'
+                    backgroundColor: isDarkMode ? '#1e293b' : '#fff' // Dot background
                 },
                 line: {
                     tension: 0.4,
@@ -217,7 +227,7 @@ export default function TempChart({
                 }
             }
         };
-    }, [type, limits]);
+    }, [type, limits, isDarkMode]);
 
     // Prepare Data
     const chartData = useMemo(() => {
