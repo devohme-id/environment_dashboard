@@ -1,5 +1,8 @@
 const { Bot } = require("gramio");
 const db = require('./db');
+const fs = require('fs').promises;
+const path = require('path');
+const SETTINGS_FILE = path.join(__dirname, 'settings.json');
 
 let bot = null;
 let lastStatuses = {};
@@ -59,21 +62,30 @@ async function checkStatus() {
 
 
 
+        // Read settings dynamically
+        let fileSettings = {};
+        try {
+            const data = await fs.readFile(SETTINGS_FILE, 'utf8');
+            fileSettings = JSON.parse(data);
+        } catch (error) { } // Ignore missing file
 
+        const settings = {
+            telegram_chat_id: fileSettings.telegram_chat_id || process.env.TELEGRAM_CHAT_ID,
+            telegram_alert_enabled: fileSettings.telegram_alert_enabled ?? (process.env.TELEGRAM_ALERT_ENABLED === 'true')
+        };
 
         for (const row of rows) {
             const lineId = row.line_id;
             const currentStatus = row.ground_status;
 
             // Check for change
-            // Check for change
             if (lastStatuses[lineId] && lastStatuses[lineId] !== currentStatus) {
                 const message = `⚠️ <b>Status Changed</b>\n\n📍 <b>Line:</b> ${lineId}\n🔄 <b>Status:</b> ${lastStatuses[lineId]} ➡️ ${currentStatus}\n🕒 <b>Time:</b> ${new Date().toLocaleTimeString()}`;
 
-                if (process.env.TELEGRAM_CHAT_ID && bot) {
+                if (settings.telegram_alert_enabled && settings.telegram_chat_id && bot) {
                     try {
                         await bot.api.sendMessage({
-                            chat_id: process.env.TELEGRAM_CHAT_ID,
+                            chat_id: settings.telegram_chat_id,
                             text: message,
                             parse_mode: "HTML"
                         });

@@ -15,7 +15,9 @@ require('dotenv').config();
 
 // Register Plugins
 fastify.register(cors, {
-    origin: true // Allow all origins for development
+    origin: '*', // Allow all origins explicitly
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 });
 
 fastify.register(require('@fastify/compress'), { global: true });

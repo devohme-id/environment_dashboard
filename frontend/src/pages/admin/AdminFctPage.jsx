@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { IconEdit, IconTrash, IconPlus, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 
 const AdminFctPage = () => {
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const queryClient = useQueryClient();
 
     // Cursor-based pagination
     const [cursorHistory, setCursorHistory] = useState([null]);
     const [step, setStep] = useState(0);
-    const [nextCursor, setNextCursor] = useState(null);
     const [limit, setLimit] = useState(10);
 
     // Filters
@@ -23,48 +22,91 @@ const AdminFctPage = () => {
         setAppliedFilters(filters);
         setStep(0);
         setCursorHistory([null]);
-        setNextCursor(null);
     };
 
-    const fetchData = async () => {
-        setLoading(true);
-        const currentCursor = cursorHistory[step];
+    // Fetch Function
+    const fetchFctData = async ({ queryKey }) => {
+        const [_, currentStep, currentCursor, currentLimit, currentFilters] = queryKey;
         const params = new URLSearchParams();
-        params.append('limit', limit);
+        params.append('limit', currentLimit);
         if (currentCursor) params.append('cursor', currentCursor);
-        if (appliedFilters.devid) params.append('devid', appliedFilters.devid);
-        if (appliedFilters.temp) params.append('temp', appliedFilters.temp);
-        if (appliedFilters.humidity) params.append('humidity', appliedFilters.humidity);
+        if (currentFilters.devid) params.append('devid', currentFilters.devid);
+        if (currentFilters.temp) params.append('temp', currentFilters.temp);
+        if (currentFilters.humidity) params.append('humidity', currentFilters.humidity);
 
-        try {
-            const res = await fetch(`http://localhost:3000/api/admin/fct?${params.toString()}`);
-            const json = await res.json();
-            setData(json.data);
-            setNextCursor(json.nextCursor);
-        } catch (error) {
-            console.error(error);
-            alert("Failed to fetch data");
-        } finally {
-            setLoading(false);
-        }
+        const res = await fetch(`http://localhost:3000/api/admin/fct?${params.toString()}`);
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
     };
 
-    useEffect(() => {
-        fetchData();
-    }, [step, limit, appliedFilters]);
+    // Query
+    const {
+        data: queryData,
+        isLoading,
+        isError,
+        isPlaceholderData
+    } = useQuery({
+        queryKey: ['fctData', step, cursorHistory[step], limit, appliedFilters],
+        queryFn: fetchFctData,
+        placeholderData: keepPreviousData,
+    });
+
+    const data = queryData?.data || [];
+    const nextCursor = queryData?.nextCursor;
+
+    // Mutations
+    const deleteMutation = useMutation({
+        mutationFn: async (id) => {
+            await fetch(`http://localhost:3000/api/admin/fct/${id}`, { method: 'DELETE' });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(['fctData']);
+        }
+    });
+
+    const saveMutation = useMutation({
+        mutationFn: async (record) => {
+            const url = record.id
+                ? `http://localhost:3000/api/admin/fct/${record.id}`
+                : 'http://localhost:3000/api/admin/fct';
+            const method = record.id ? 'PUT' : 'POST';
+
+            const body = {
+                devid: record.devid,
+                temperature: record.temperature,
+                humidity: record.humidity,
+                created_at: record.created_at
+            };
+
+            const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (!res.ok) throw new Error('Operation failed');
+            return res.json();
+        },
+        onSuccess: () => {
+            setIsModalOpen(false);
+            queryClient.invalidateQueries(['fctData']);
+        },
+        onError: (error) => {
+            alert('Error: ' + error.message);
+        }
+    });
 
     // Pagination Handlers
     const handleNext = () => {
-        if (nextCursor) {
+        if (!isPlaceholderData && nextCursor) {
             const newHistory = [...cursorHistory];
             if (step === newHistory.length - 1) {
                 newHistory.push(nextCursor);
                 setCursorHistory(newHistory);
             }
-            setStep(step + 1);
+            setStep(prev => prev + 1);
         }
     };
-    const handlePrev = () => { if (step > 0) setStep(step - 1); };
+    const handlePrev = () => { if (step > 0) setStep(prev => prev - 1); };
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
@@ -82,31 +124,15 @@ const AdminFctPage = () => {
         setIsModalOpen(true);
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = (id) => {
         if (confirm('Are you sure?')) {
-            try {
-                await fetch(`http://localhost:3000/api/admin/fct/${id}`, { method: 'DELETE' });
-                fetchData();
-            } catch (error) { alert('Failed to delete'); }
+            deleteMutation.mutate(id);
         }
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        const url = currentRecord
-            ? `http://localhost:3000/api/admin/fct/${currentRecord.id}`
-            : 'http://localhost:3000/api/admin/fct';
-        const method = currentRecord ? 'PUT' : 'POST';
-
-        try {
-            const res = await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-            if (res.ok) { setIsModalOpen(false); fetchData(); }
-            else { alert('Operation failed'); }
-        } catch (error) { alert('Error: ' + error.message); }
+        saveMutation.mutate({ ...formData, id: currentRecord?.id });
     };
 
     return (
@@ -152,7 +178,7 @@ const AdminFctPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {loading ? (<tr><td colSpan="5" className="text-center py-4">Loading...</td></tr>) :
+                            {isLoading ? (<tr><td colSpan="5" className="text-center py-4">Loading...</td></tr>) :
                                 data.length === 0 ? (<tr><td colSpan="5" className="text-center py-4">No records found</td></tr>) :
                                     data.map((item) => (
                                         <tr key={item.id} className="bg-white border-b dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -174,8 +200,8 @@ const AdminFctPage = () => {
                 <div className="flex justify-between items-center p-4 border-t dark:border-gray-700">
                     <span className="text-sm dark:text-gray-400">Page {step + 1}</span>
                     <div className="flex space-x-1">
-                        <button onClick={handlePrev} disabled={step === 0} className="px-3 py-1 bg-gray-800 text-white rounded disabled:opacity-50"><IconChevronLeft size={16} /></button>
-                        <button onClick={handleNext} disabled={!nextCursor} className="px-3 py-1 bg-gray-800 text-white rounded disabled:opacity-50"><IconChevronRight size={16} /></button>
+                        <button onClick={handlePrev} disabled={step === 0 || isLoading} className="px-3 py-1 bg-gray-800 text-white rounded disabled:opacity-50"><IconChevronLeft size={16} /></button>
+                        <button onClick={handleNext} disabled={!nextCursor || isLoading || isPlaceholderData} className="px-3 py-1 bg-gray-800 text-white rounded disabled:opacity-50"><IconChevronRight size={16} /></button>
                     </div>
                 </div>
             </div>
@@ -191,7 +217,7 @@ const AdminFctPage = () => {
                             <input placeholder="Timestamp" value={formData.created_at} onChange={e => setFormData({ ...formData, created_at: e.target.value })} className="w-full border p-2 rounded dark:bg-gray-700 dark:text-white" />
                             <div className="flex justify-end space-x-2">
                                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
-                                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
+                                <button type="submit" disabled={saveMutation.isPending} className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50">{saveMutation.isPending ? 'Saving...' : 'Save'}</button>
                             </div>
                         </form>
                     </div>

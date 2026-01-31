@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { IconEdit, IconTrash, IconPlus, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 
 const AdminAktPage = () => {
-    const [data, setData] = useState([]);
-
-    const [loading, setLoading] = useState(true);
+    const queryClient = useQueryClient();
 
     // Cursor-based pagination state
     const [cursorHistory, setCursorHistory] = useState([null]); // Initialize with null for first page
     const [step, setStep] = useState(0); // Current page index (0-based)
-    const [nextCursor, setNextCursor] = useState(null);
+
+    // We need to track nextCursor from valid responses to build history
+    // But useQuery handles data. We can derive nextCursor from data.nextCursor
 
     const [limit, setLimit] = useState(10);
 
@@ -19,7 +20,7 @@ const AdminAktPage = () => {
         temp: '',
         humidity: ''
     });
-    // Applied filters (actual filters sent to API)
+    // Applied filters
     const [appliedFilters, setAppliedFilters] = useState({
         devid: '',
         temp: '',
@@ -40,64 +41,101 @@ const AdminAktPage = () => {
         setAppliedFilters(filters);
         setStep(0);
         setCursorHistory([null]);
-        setNextCursor(null);
     };
 
-    const fetchData = async () => {
-        setLoading(true);
-        const currentCursor = cursorHistory[step];
+    // Fetch Function
+    const fetchAktData = async ({ queryKey }) => {
+        const [_, currentStep, currentCursor, currentLimit, currentFilters] = queryKey;
 
-        // Build Query
         const params = new URLSearchParams();
-        params.append('limit', limit);
+        params.append('limit', currentLimit);
         if (currentCursor) params.append('cursor', currentCursor);
-        if (appliedFilters.devid) params.append('devid', appliedFilters.devid);
-        if (appliedFilters.temp) params.append('temp', appliedFilters.temp);
-        if (appliedFilters.humidity) params.append('humidity', appliedFilters.humidity);
+        if (currentFilters.devid) params.append('devid', currentFilters.devid);
+        if (currentFilters.temp) params.append('temp', currentFilters.temp);
+        if (currentFilters.humidity) params.append('humidity', currentFilters.humidity);
 
-        try {
-            // Changed endpoint to /api/admin/akt
-            const res = await fetch(`http://localhost:3000/api/admin/akt?${params.toString()}`);
-            const json = await res.json();
-            setData(json.data);
-            setNextCursor(json.nextCursor);
-        } catch (error) {
-            console.error(error);
-            alert("Failed to fetch data");
-        } finally {
-            setLoading(false);
-        }
+        const res = await fetch(`http://localhost:3000/api/admin/akt?${params.toString()}`);
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
     };
 
-    useEffect(() => {
-        fetchData();
-    }, [step, limit, appliedFilters]); // Re-fetch when step or appliedFilters change
+    // Query
+    const {
+        data: queryData,
+        isLoading,
+        isError,
+        isPlaceholderData
+    } = useQuery({
+        queryKey: ['aktData', step, cursorHistory[step], limit, appliedFilters],
+        queryFn: fetchAktData,
+        placeholderData: keepPreviousData,
+    });
 
+    const data = queryData?.data || [];
+    const nextCursor = queryData?.nextCursor;
+
+    // Mutations
+    const deleteMutation = useMutation({
+        mutationFn: async (id) => {
+            await fetch(`http://localhost:3000/api/admin/akt/${id}`, { method: 'DELETE' });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(['aktData']);
+        }
+    });
+
+    const saveMutation = useMutation({
+        mutationFn: async (record) => {
+            const url = record.id
+                ? `http://localhost:3000/api/admin/akt/${record.id}`
+                : 'http://localhost:3000/api/admin/akt';
+            const method = record.id ? 'PUT' : 'POST';
+
+            const body = {
+                devid: record.devid,
+                temperature: record.temperature,
+                humidity: record.humidity,
+                created_at: record.created_at
+            };
+
+            const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (!res.ok) throw new Error('Operation failed');
+            return res.json();
+        },
+        onSuccess: () => {
+            setIsModalOpen(false);
+            queryClient.invalidateQueries(['aktData']);
+        },
+        onError: (error) => {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    // Handlers
     const handleNext = () => {
-        if (nextCursor) {
-            // Append nextCursor to history if we are moving forward to a new page
+        if (!isPlaceholderData && nextCursor) {
             const newHistory = [...cursorHistory];
-            // Verify we are at the end of known history before pushing
             if (step === newHistory.length - 1) {
                 newHistory.push(nextCursor);
                 setCursorHistory(newHistory);
             }
-            setStep(step + 1);
+            setStep(prev => prev + 1);
         }
     };
 
     const handlePrev = () => {
         if (step > 0) {
-            setStep(step - 1);
+            setStep(prev => prev - 1);
         }
     };
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
-        setFilters(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        setFilters(prev => ({ ...prev, [name]: value }));
     };
 
     const handleEdit = (item) => {
@@ -111,44 +149,15 @@ const AdminAktPage = () => {
         setIsModalOpen(true);
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = (id) => {
         if (confirm('Are you sure you want to delete this record?')) {
-            try {
-                // Changed endpoint to /api/admin/akt
-                await fetch(`http://localhost:3000/api/admin/akt/${id}`, {
-                    method: 'DELETE',
-                });
-                fetchData();
-            } catch (error) {
-                alert('Failed to delete');
-            }
+            deleteMutation.mutate(id);
         }
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        const url = currentRecord
-            ? `http://localhost:3000/api/admin/akt/${currentRecord.id}`
-            : 'http://localhost:3000/api/admin/akt';
-
-        const method = currentRecord ? 'PUT' : 'POST';
-
-        try {
-            const res = await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-
-            if (res.ok) {
-                setIsModalOpen(false);
-                fetchData();
-            } else {
-                alert('Operation failed');
-            }
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
+        saveMutation.mutate({ ...formData, id: currentRecord?.id });
     };
 
     return (
@@ -226,7 +235,7 @@ const AdminAktPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {loading ? (
+                            {isLoading ? (
                                 <tr>
                                     <td colSpan="5" className="px-6 py-4 text-center">Loading...</td>
                                 </tr>
@@ -262,7 +271,7 @@ const AdminAktPage = () => {
                     </table>
                 </div>
 
-                {/* Pagination (Same as SMT) */}
+                {/* Pagination */}
                 <div className="flex justify-between items-center p-4 border-t border-gray-200 dark:border-gray-700">
                     <span className="text-sm text-gray-700 dark:text-gray-400">
                         Showing page <span className="font-semibold text-gray-900 dark:text-white">{step + 1}</span>
@@ -270,7 +279,7 @@ const AdminAktPage = () => {
                     <div className="inline-flex mt-2 xs:mt-0">
                         <button
                             onClick={handlePrev}
-                            disabled={step === 0}
+                            disabled={step === 0 || isLoading}
                             className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 rounded-l hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:opacity-50"
                         >
                             <IconChevronLeft size={16} />
@@ -278,7 +287,7 @@ const AdminAktPage = () => {
                         </button>
                         <button
                             onClick={handleNext}
-                            disabled={!nextCursor}
+                            disabled={!nextCursor || isLoading || isPlaceholderData}
                             className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-l border-gray-700 rounded-r hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:opacity-50"
                         >
                             Next
@@ -346,9 +355,10 @@ const AdminAktPage = () => {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                    disabled={saveMutation.isPending}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
                                 >
-                                    Save
+                                    {saveMutation.isPending ? 'Saving...' : 'Save'}
                                 </button>
                             </div>
                         </form>

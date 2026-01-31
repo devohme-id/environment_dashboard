@@ -8,6 +8,12 @@ async function routes(fastify, options) {
     // Helper: Delay execution
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+    // Helper: Format Date for MySQL
+    const formatDate = (dateStr) => {
+        if (!dateStr) return new Date(); // Default to now
+        return new Date(dateStr).toISOString().slice(0, 19).replace('T', ' ');
+    };
+
     // Endpoint: Get Temperature & Humidity Data
     // Replaces: get_temphygro_data.php
     fastify.get('/temphygro', async (request, reply) => {
@@ -247,7 +253,7 @@ async function routes(fastify, options) {
         try {
             await db.query(
                 `INSERT INTO temphygro_data (devid, temperature, humidity, created_at) VALUES (?, ?, ?, ?)`,
-                [devid, temperature, humidity, created_at || new Date()]
+                [devid, temperature, humidity, formatDate(created_at)]
             );
             return { success: true };
         } catch (error) {
@@ -264,7 +270,7 @@ async function routes(fastify, options) {
         try {
             await db.query(
                 `UPDATE temphygro_data SET devid = ?, temperature = ?, humidity = ?, created_at = ? WHERE id = ?`,
-                [devid, temperature, humidity, created_at, id]
+                [devid, temperature, humidity, formatDate(created_at), id]
             );
             return { success: true };
         } catch (error) {
@@ -327,15 +333,10 @@ async function routes(fastify, options) {
     });
 
     fastify.post('/admin/akt', async (request, reply) => {
-        // Reuse basic insert but validate ID is in AKT range? 
-        // For simplicity, we trust admin inputs or just insert. 
-        // But reusing existing POST /admin/smt logic is fine if table is same.
-        // Actually, let's just point to a shared insert handler or duplicate.
-        // Duplicate for isolation.
         const { devid, temperature, humidity, created_at } = request.body;
         if (!devid || temperature === undefined || humidity === undefined) return reply.code(400).send({ error: "Missing fields" });
         try {
-            await db.query(`INSERT INTO temphygro_data (devid, temperature, humidity, created_at) VALUES (?, ?, ?, ?)`, [devid, temperature, humidity, created_at || new Date()]);
+            await db.query(`INSERT INTO temphygro_data (devid, temperature, humidity, created_at) VALUES (?, ?, ?, ?)`, [devid, temperature, humidity, formatDate(created_at)]);
             return { success: true };
         } catch (error) { reply.code(500).send({ error: error.message }); }
     });
@@ -344,7 +345,7 @@ async function routes(fastify, options) {
         const { id } = request.params;
         const { devid, temperature, humidity, created_at } = request.body;
         try {
-            await db.query(`UPDATE temphygro_data SET devid=?, temperature=?, humidity=?, created_at=? WHERE id=?`, [devid, temperature, humidity, created_at, id]);
+            await db.query(`UPDATE temphygro_data SET devid=?, temperature=?, humidity=?, created_at=? WHERE id=?`, [devid, temperature, humidity, formatDate(created_at), id]);
             return { success: true };
         } catch (error) { reply.code(500).send({ error: error.message }); }
     });
@@ -400,7 +401,7 @@ async function routes(fastify, options) {
         const { devid, temperature, humidity, created_at } = request.body;
         if (!devid || temperature === undefined || humidity === undefined) return reply.code(400).send({ error: "Missing fields" });
         try {
-            await db.query(`INSERT INTO temphygro_data (devid, temperature, humidity, created_at) VALUES (?, ?, ?, ?)`, [devid, temperature, humidity, created_at || new Date()]);
+            await db.query(`INSERT INTO temphygro_data (devid, temperature, humidity, created_at) VALUES (?, ?, ?, ?)`, [devid, temperature, humidity, formatDate(created_at)]);
             return { success: true };
         } catch (error) { reply.code(500).send({ error: error.message }); }
     });
@@ -409,7 +410,7 @@ async function routes(fastify, options) {
         const { id } = request.params;
         const { devid, temperature, humidity, created_at } = request.body;
         try {
-            await db.query(`UPDATE temphygro_data SET devid=?, temperature=?, humidity=?, created_at=? WHERE id=?`, [devid, temperature, humidity, created_at, id]);
+            await db.query(`UPDATE temphygro_data SET devid=?, temperature=?, humidity=?, created_at=? WHERE id=?`, [devid, temperature, humidity, formatDate(created_at), id]);
             return { success: true };
         } catch (error) { reply.code(500).send({ error: error.message }); }
     });
@@ -461,7 +462,7 @@ async function routes(fastify, options) {
         const { line_id, ground_status, timestamp } = request.body;
         if (!line_id || !ground_status) return reply.code(400).send({ error: "Missing fields" });
         try {
-            await db.query(`INSERT INTO grounding_logs (line_id, ground_status, timestamp) VALUES (?, ?, ?)`, [line_id, ground_status, timestamp || new Date()]);
+            await db.query(`INSERT INTO grounding_logs (line_id, ground_status, timestamp) VALUES (?, ?, ?)`, [line_id, ground_status, formatDate(timestamp)]);
             return { success: true };
         } catch (error) { reply.code(500).send({ error: error.message }); }
     });
@@ -470,7 +471,7 @@ async function routes(fastify, options) {
         const { id } = request.params;
         const { line_id, ground_status, timestamp } = request.body;
         try {
-            await db.query(`UPDATE grounding_logs SET line_id=?, ground_status=?, timestamp=? WHERE id=?`, [line_id, ground_status, timestamp, id]);
+            await db.query(`UPDATE grounding_logs SET line_id=?, ground_status=?, timestamp=? WHERE id=?`, [line_id, ground_status, formatDate(timestamp), id]);
             return { success: true };
         } catch (error) { reply.code(500).send({ error: error.message }); }
     });
