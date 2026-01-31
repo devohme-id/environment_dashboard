@@ -31,3 +31,6 @@ pids
 .vscode
 *.swp
 *.swo
+
+# App Settings
+settings.json

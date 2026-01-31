@@ -60,3 +60,6 @@ Thumbs.db
 .nuxt/
 .output/
 .vercel/
+
+# App Settings
+backend/settings.json
